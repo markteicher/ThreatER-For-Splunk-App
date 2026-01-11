@@ -139,70 +139,135 @@ The app uses clear, API-aligned sourcetypes:
 
 ## 🧭 Navigation Structure
 
-### 📁 General
-- **
+The ThreatER for Splunk App mirrors the ThreatER portal navigation and is organized to support operational workflows, from collection and enforcement to administration and reporting.
 
-- ## 🧭 Navigation Structure
-
-The ThreatER for Splunk App mirrors the ThreatER Portal navigation to provide a familiar and intuitive experience.
+### 📊 Overview
+- **Overview** — High-level platform and threat visibility
 
 ---
 
-### 📁 Collect
-
-#### Lists
-- List Types
-- Allow Lists
-- Block Lists
-- Threat Lists
-
-#### List Creation
-- Creating IP Threat Lists
-- Creating Manual IP Allow Lists
-- Creating Manual IP Block Lists
-- Creating Manual Domain Lists
-
-#### List Details
-- View List Metadata
-- Add Entries
-- Remove Entries
-- Apply to Policies
-- Create New Policy During List Creation
+### 📥 Collect
+- **Lists**
+  - List Types
+  - Allow Lists
+  - Block Lists
+  - Threat Lists
+- **List Creation**
+  - Create IP Threat Lists
+  - Create Manual IP Allow & Block Lists
+  - Create Manual Domain Lists
+- **List Details**
+  - List Details
+  - Add Entries
+  - Apply to Policies
+  - Create Policy During List Creation
+  - Add & Remove List Entries
+- **Plugins**
+  - List Details
+  - Set Up External List
+  - Apply to Policies
 
 ---
 
-### 🧱 Enforce
+### 🛡️ Enforce
+- **Enforcers**
+  - Enforcers
+  - Enforcer Status
+  - Enforcer Health
+- **Enforcement Configuration**
+  - Policies
+  - Enforcement Scope
+  - Enforcement State
+- **Networks**
+  - Create Networks
+  - Network Details
+  - Inbound / Outbound
+  - Create Policy During Network Creation
+  - IPs
+  - Edit Network
+  - Delete Network
+  - Duplicate Network
+- **Ports**
+  - Add Ports
+  - Edit Ports
+  - Delete Ports
 
-#### Enforcers
-- Enforcer Inventory
-- Enforcement Status
-- Enforcement Health
+---
 
-#### Enforcement Configuration
-- Policy Assignment
-- Enforcement Scope
-- Active / Inactive Enforcement
+### 🏢 Administration
+- **Users**
+  - Users
+  - Create New User
+  - Edit User Accounts
+  - Disable an Account
+  - Enable an Account
+  - Update User Email
+  - Update User Role
+  - Update User Password
+  - Delete Users
+  - Users Filter
+- **Subscriptions**
+- **Command Logs**
+
+---
+
+### 🔎 IOC Search
+- IOC Results Header
+- Available Premium Intelligence
+- Lists
+
+---
+
+### 📑 Reports
+- Allowed / Blocked
+- Reason Summary
+- Category Summary
+- Top 10 Countries
+- Top 10 ASNs
+- Top Countries by Threat Category
+- ASNs by Threat Category
+- **Report Builder**
+  - Cover Sheet
+  - Report Parameters
+- **Scheduled Reports**
+  - Reports
+  - Editing Scheduled Reports
+  - Disabling Scheduled Reports
+  - Deleting Scheduled Reports
+- Policy Enforcement
+
+---
+
+### 📦 Subscriptions
+- Unexpected Blocks
+- Block Events
+- Mitigation Strategies
+- Adjust Thresholds
+- Enable threatER Allow List
+- Add IP to Manual Allow List
 
 ---
 
 ### ⚙️ Settings
+- **System**
+  - Syslog
+  - Access Control
+  - Bridges
+  - NTP
+- **Device Configuration**
+  - Interface Settings
+  - DHCP Settings
+  - WiFi Configuration
+- **Enforce Software**
+  - Update Now
+  - Schedule Update
+  - Cancel Scheduled Update
+  - Revert to Previous Build
 
-#### System
-- Syslog
-- Access Control
-- Bridges
-- NTP
+---
 
-#### Device Configuration
-- Interface Settings
-- DHCP Settings
-- WiFi Configuration
-
-#### Enforce Software
-- Update Now
-- Schedule Update
-- Cancel Scheduled Update
-- Revert to Previous Build
+### ❓ Help
+- **Support & Troubleshooting**
 
 ---
 
