@@ -140,26 +140,69 @@ The app uses clear, API-aligned sourcetypes:
 ## 🧭 Navigation Structure
 
 ### 📁 General
-- **Overview**
+- **
 
-### 📊 Dashboards
-- **Threat Overview**
-- **Blocked Threats**
-- **Threat Intelligence**
-- **Trends**
-- **Geography**
-- **Operations**
-- **Health**
+- ## 🧭 Navigation Structure
 
-### 🛠️ Manage
-- **Policies**
-- **Blocklists**
-- **Allowlists**
-- **Feeds**
-- **Integrations**
+The ThreatER for Splunk App mirrors the ThreatER Portal navigation to provide a familiar and intuitive experience.
 
-### ❓ Help
-- **Support & Troubleshooting**
+---
+
+### 📁 Collect
+
+#### Lists
+- List Types
+- Allow Lists
+- Block Lists
+- Threat Lists
+
+#### List Creation
+- Creating IP Threat Lists
+- Creating Manual IP Allow Lists
+- Creating Manual IP Block Lists
+- Creating Manual Domain Lists
+
+#### List Details
+- View List Metadata
+- Add Entries
+- Remove Entries
+- Apply to Policies
+- Create New Policy During List Creation
+
+---
+
+### 🧱 Enforce
+
+#### Enforcers
+- Enforcer Inventory
+- Enforcement Status
+- Enforcement Health
+
+#### Enforcement Configuration
+- Policy Assignment
+- Enforcement Scope
+- Active / Inactive Enforcement
+
+---
+
+### ⚙️ Settings
+
+#### System
+- Syslog
+- Access Control
+- Bridges
+- NTP
+
+#### Device Configuration
+- Interface Settings
+- DHCP Settings
+- WiFi Configuration
+
+#### Enforce Software
+- Update Now
+- Schedule Update
+- Cancel Scheduled Update
+- Revert to Previous Build
 
 ---
 
