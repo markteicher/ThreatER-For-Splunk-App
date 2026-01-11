@@ -36,6 +36,12 @@
       <view name="threater_manage_list_entries" label="Add &amp; Remove List Entries" />
     </collection>
 
+    <collection label="Plugins">
+      <view name="threater_plugin_list_details" label="List Details" />
+      <view name="threater_plugin_external_list" label="Set Up External List" />
+      <view name="threater_plugin_apply_policies" label="Apply to Policies" />
+    </collection>
+
   </collection>
 
   <!-- ========================= -->
@@ -55,6 +61,77 @@
       <view name="threater_enforcement_state" label="Enforcement State" />
     </collection>
 
+  </collection>
+
+  <!-- ========================= -->
+  <!-- Administration -->
+  <!-- ========================= -->
+  <collection label="Administration">
+
+    <collection label="Users">
+      <view name="threater_users" label="Users" />
+      <view name="threater_create_user" label="Create New User" />
+      <view name="threater_edit_user" label="Edit User Accounts" />
+      <view name="threater_disable_user" label="Disable an Account" />
+      <view name="threater_enable_user" label="Enable an Account" />
+      <view name="threater_update_user_email" label="Update User Email" />
+      <view name="threater_update_user_role" label="Update User Role" />
+      <view name="threater_update_user_password" label="Update User Password" />
+      <view name="threater_delete_user" label="Delete Users" />
+      <view name="threater_user_filter" label="Users Filter" />
+    </collection>
+
+    <view name="threater_subscriptions_admin" label="Subscriptions" />
+    <view name="threater_command_logs" label="Command Logs" />
+
+  </collection>
+
+  <!-- ========================= -->
+  <!-- IOC Search -->
+  <!-- ========================= -->
+  <collection label="IOC Search">
+    <view name="threater_ioc_results_header" label="IOC Results Header" />
+    <view name="threater_premium_intelligence" label="Available Premium Intelligence" />
+    <view name="threater_ioc_lists" label="Lists" />
+  </collection>
+
+  <!-- ========================= -->
+  <!-- Reports -->
+  <!-- ========================= -->
+  <collection label="Reports">
+    <view name="threater_report_allowed_blocked" label="Allowed / Blocked" />
+    <view name="threater_report_reason_summary" label="Reason Summary" />
+    <view name="threater_report_category_summary" label="Category Summary" />
+    <view name="threater_report_top_countries" label="Top 10 Countries" />
+    <view name="threater_report_top_asns" label="Top 10 ASNs" />
+    <view name="threater_report_countries_by_category" label="Top Countries by Threat Category" />
+    <view name="threater_report_asns_by_category" label="ASNs by Threat Category" />
+
+    <collection label="Report Builder">
+      <view name="threater_report_cover_sheet" label="Cover Sheet" />
+      <view name="threater_report_parameters" label="Report Parameters" />
+    </collection>
+
+    <collection label="Scheduled Reports">
+      <view name="threater_reports" label="Reports" />
+      <view name="threater_edit_scheduled_reports" label="Editing Scheduled Reports" />
+      <view name="threater_disable_scheduled_reports" label="Disabling Scheduled Reports" />
+      <view name="threater_delete_scheduled_reports" label="Deleting Scheduled Reports" />
+    </collection>
+
+    <view name="threater_policy_enforcement" label="Policy Enforcement" />
+  </collection>
+
+  <!-- ========================= -->
+  <!-- Subscriptions -->
+  <!-- ========================= -->
+  <collection label="Subscriptions">
+    <view name="threater_unexpected_blocks" label="Unexpected Blocks" />
+    <view name="threater_block_events" label="Block Events" />
+    <view name="threater_mitigation_strategies" label="Mitigation Strategies" />
+    <view name="threater_adjust_thresholds" label="Adjust Thresholds" />
+    <view name="threater_enable_allow_list" label="Enable threatER Allow List" />
+    <view name="threater_add_ip_allow_list" label="Add IP to Manual Allow List" />
   </collection>
 
   <!-- ========================= -->
