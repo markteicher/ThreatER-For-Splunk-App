@@ -1,88 +1,139 @@
-# 🛡️ ThreatER for Splunk App
+# ThreatER for Splunk App
 
-## 🌐 Overview
+## Overview
 
 ThreatER is a preemptive cybersecurity platform that builds trusted networks by automatically blocking known malicious traffic (IPs, domains) at the network edge, reducing noise for security teams and improving the efficiency of existing security tools (firewalls, SIEMs).
 
-ThreatER acts as a foundational security layer by ingesting threat intelligence from multiple commercial, open-source, and government feeds and proactively filtering malicious activity **before it reaches internal systems**. It protects against both inbound and outbound threats with minimal latency, delivering an automated “set it and forget it” defense model.
+It acts as a foundational layer, ingesting threat intelligence from many sources to proactively filter out bad actors before they reach your internal systems, handling both inbound and outbound threats with minimal latency, offering an automated **“set it and forget it”** defense.
 
-The ThreatER for Splunk App brings this intelligence and enforcement visibility directly into Splunk, enabling security teams to **monitor, analyze, audit, and operationalize ThreatER activity** without relying solely on the ThreatER Portal UI.
-
----
-
-## 🧠 How ThreatER Works
-
-- **📡 Threat Intelligence Collection**  
-  Aggregates data from commercial, open-source, and government threat feeds.
-
-- **🚫 Proactive Blocking**  
-  Blocks known malicious IPs and domains at line speed at the network layer (Layer 2/3), before traffic reaches firewalls or downstream controls.
-
-- **🔗 Security Stack Integration**  
-  Integrates with existing firewalls, EDR, SIEM, and security platforms to reduce alert noise and improve detection quality.
-
-- **⚙️ Automation**  
-  Automatically enforces blocking policies based on threat intelligence, transforming reactive security into proactive defense.
+This Splunk App enables security teams to **ingest, monitor, analyze, and operationalize ThreatER intelligence and enforcement data directly in Splunk**, without relying on the ThreatER portal UI.
 
 ---
 
-## ⭐ Key Benefits
+## How ThreatER Works
 
-- **🔕 Reduces Problem Space**  
-  Eliminates known-bad traffic, dramatically reducing alert volume.
+- **Threat Intelligence Collection**  
+  Gathers intelligence from commercial, open-source, and government feeds.
 
-- **🧰 Enhances Existing Security Controls**  
-  Feeds cleaner data into SIEMs, firewalls, and EDR platforms.
+- **Proactive Blocking**  
+  Blocks known malicious IPs and domains at line speed at the network layer (Layer 2/3), before traffic reaches firewalls or internal defenses.
 
-- **⚡ Real-Time & Scalable**  
-  Enforces blocking instantly at scale without impacting network performance.
+- **Security Stack Integration**  
+  Works alongside firewalls, EDR, SIEMs, and network controls to reduce alert noise and improve signal quality.
 
-- **🤝 Builds Trusted Networks**  
-  Establishes a baseline of trusted activity by removing known threats at the network edge.
-
----
-
-## 📊 Splunk App Capabilities
-
-The ThreatER for Splunk App provides centralized visibility and analytics across ThreatER data and operations.
-
-### 🧩 Core Capabilities
-
-| Feature | Description |
-|------|-------------|
-| 🔎 Threat Intelligence Visibility | View active threat indicators (IPs, domains, metadata) |
-| 🚧 Enforcement Monitoring | Track blocked inbound and outbound traffic |
-| 📜 Policy & Automation Auditing | Monitor automated enforcement actions |
-| 📈 Operational Telemetry | Analyze ingestion, enforcement, and system health |
-| 🗃️ Historical Analysis | Retain raw threat data for investigations and audits |
+- **Automation**  
+  Enforces policies automatically, transforming reactive security workflows into proactive protection.
 
 ---
 
-## 📈 Dashboards
+## Key Benefits
+
+- **Reduces Problem Space**  
+  Eliminates known-bad traffic before it generates alerts.
+
+- **Enhances Existing Security Tools**  
+  Feeds cleaner data into downstream security platforms.
+
+- **Real-Time & Scalable**  
+  Blocks threats instantly at massive scale with minimal latency.
+
+- **Builds Trust**  
+  Establishes a baseline of trusted network activity.
+
+---
+
+## 🧾 ThreatER API Coverage (v3)
+
+This Splunk App is built to cover **all major ThreatER API v3 endpoints**:
+
+**Base API**
+
+https://portal.threater.com/api/v3/
+
+### Threat Intelligence
+- Malicious IPs
+- Malicious Domains
+- IP Reputation
+- Domain Reputation
+- Indicator Metadata
+- Confidence & Scoring Data
+
+### Network Enforcement
+- Blocklists
+- Allowlists
+- Policy Assignments
+- Enforcement Status
+- Action History
+
+### Intelligence Feeds
+- Feed Sources
+- Feed Categories
+- Feed Updates
+- Feed Health & Status
+
+### Observations & Telemetry
+- Block Events
+- Allow Events
+- Traffic Observations
+- Inbound / Outbound Events
+- Enforcement Metrics
+
+### Administration & Platform
+- Tenants
+- Organizations
+- Users
+- Roles & Permissions
+- API Keys
+- Platform Health
+
+All data is ingested as **raw JSON** to preserve evidence fidelity.
+
+---
+
+## 📊 Dashboards
 
 | Dashboard | Description |
-|----------|-------------|
-| 🧭 Overview | High-level threat activity and enforcement summary |
-| 🧠 Threat Intelligence | Active IPs, domains, and indicators |
-| 🚫 Enforcement Activity | Blocked traffic trends and volumes |
-| ⚙️ Policy & Automation | Policy execution and automation tracking |
-| 🩺 Operations | Platform health, ingestion, and processing metrics |
-| 🧾 Audit & Compliance | Historical actions and evidence preservation |
+|---------|-------------|
+| 🌐 Overview | High-level ThreatER activity summary |
+| 🚫 Blocked Threats | Malicious IPs & domains blocked |
+| 📈 Trends | Threat activity and enforcement trends |
+| 🌍 Geography | Threat distribution by region |
+| 🧠 Intelligence | Threat intelligence insights |
+| ⚙️ Operations | Ingestion health and API status |
+| ❤️ Health | Platform and data freshness |
 
 ---
 
 ## 🧾 Sourcetypes
 
-The app ingests raw JSON events using the following sourcetypes:
+The app uses clear, API-aligned sourcetypes:
 
-- `threater:threat:intel`
-- `threater:blocked:ip`
-- `threater:blocked:domain`
+### Threat Intelligence
+- `threater:ip`
+- `threater:domain`
+- `threater:indicator`
+- `threater:reputation`
+
+### Enforcement
+- `threater:block_event`
+- `threater:allow_event`
 - `threater:policy`
-- `threater:automation`
-- `threater:telemetry`
+- `threater:enforcement_status`
+
+### Feeds
+- `threater:feed`
+- `threater:feed_update`
+- `threater:feed_health`
+
+### Telemetry
+- `threater:observation`
+- `threater:traffic_event`
+
+### Platform
+- `threater:user`
+- `threater:role`
+- `threater:tenant`
 - `threater:health`
-- `threater:audit`
 
 ---
 
@@ -92,116 +143,53 @@ The app ingests raw JSON events using the following sourcetypes:
 - **Overview**
 
 ### 📊 Dashboards
-- **Threat Summary**
+- **Threat Overview**
+- **Blocked Threats**
 - **Threat Intelligence**
-- **Enforcement Activity**
-- **Policy & Automation**
+- **Trends**
+- **Geography**
 - **Operations**
-- **Audit & Compliance**
+- **Health**
 
 ### 🛠️ Manage
-- **Threat Feeds**
 - **Policies**
-- **Automation Rules**
+- **Blocklists**
+- **Allowlists**
+- **Feeds**
+- **Integrations**
 
 ### ❓ Help
 - **Support & Troubleshooting**
 
 ---
 
-## 🚀 Deployment
-
-### Step 1: Install the App
-
-1. Download the ThreatER for Splunk App package  
-2. In Splunk Web, go to **Apps → Manage Apps**  
-3. Select **Install app from file**  
-4. Upload the package  
-5. Restart Splunk if prompted  
-
----
-
-### Step 2: Configure the App
-
-Navigate to **Apps → ThreatER → Setup**
-
-#### 🔑 API Configuration
-- **ThreatER API Base URL**  
-  `https://portal.threater.com/api/v3/`
-- **API Token**
-- **Request Timeout**
-- **Verify SSL Certificates**
-
-#### 🌐 Proxy Configuration (Optional)
-- Enable Proxy  
-- Proxy URL  
-- Proxy Username  
-- Proxy Password  
-
----
-
-### Step 3: Validate Configuration
-
-- Test API connectivity  
-- Validate authentication  
-- Verify permissions  
-- Confirm data ingestion  
-
----
-
-### Step 4: Verify Data Collection
-
-Run the following search in Splunk:
-
-index=security_threater sourcetype=threater:*
-| stats count by sourcetype
-
----
-
 ## 📦 Requirements
 
-- Splunk Enterprise or Splunk Cloud  
-- Python 3.x (Splunk bundled)  
-- ThreatER API Access  
-- Network access to ThreatER services  
+- Splunk Enterprise or Splunk Cloud
+- Python 3.x (Splunk bundled)
+- ThreatER API v3 access
+- Network access to `portal.threater.com`
 
 ---
 
 ## ✅ AppInspect Compliance
 
-- Inputs disabled by default  
-- No hardcoded credentials  
-- Encrypted credential storage  
-- App manifest included  
-- MIT License  
-- Setup-based configuration  
-
----
-
-## 🛠️ Troubleshooting
-
-### No Data Appearing
-- Verify API token permissions  
-- Confirm inputs are enabled  
-- Check Splunk internal logs  
-
-### API Errors
-- Validate authentication  
-- Confirm ThreatER API availability  
-
-### Proxy Issues
-- Validate proxy configuration  
-- Confirm SSL inspection compatibility  
+- Proper Splunk directory structure
+- Inputs disabled by default
+- No hardcoded credentials
+- Secure credential storage
+- Raw JSON ingestion
+- MIT License
 
 ---
 
 ## 📚 References
 
+- ThreatER API v3  
+  https://portal.threater.com/api/v3/
+
 - ThreatER Portal User Guide  
   https://support.threater.com/hc/en-us/articles/20834039012628-threatER-Portal-User-Guide-September-2025
-
-- ThreatER API Documentation  
-  https://portal.threater.com/api/v3/
 
 - Splunk Documentation  
   https://docs.splunk.com
