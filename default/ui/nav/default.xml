@@ -1,0 +1,94 @@
+<!--
+  ThreatER for Splunk App
+  Primary Navigation (Classic XML)
+-->
+
+<nav search_view="search">
+
+  <!-- ========================= -->
+  <!-- Overview -->
+  <!-- ========================= -->
+  <view name="threater_overview" label="Overview" />
+
+  <!-- ========================= -->
+  <!-- Collect -->
+  <!-- ========================= -->
+  <collection label="Collect">
+
+    <collection label="Lists">
+      <view name="threater_list_types" label="List Types" />
+      <view name="threater_allow_lists" label="Allow Lists" />
+      <view name="threater_block_lists" label="Block Lists" />
+      <view name="threater_threat_lists" label="Threat Lists" />
+    </collection>
+
+    <collection label="List Creation">
+      <view name="threater_create_ip_threat_lists" label="Create IP Threat Lists" />
+      <view name="threater_create_ip_allow_block_lists" label="Create Manual IP Allow &amp; Block Lists" />
+      <view name="threater_create_domain_lists" label="Create Manual Domain Lists" />
+    </collection>
+
+    <collection label="List Details">
+      <view name="threater_list_details" label="List Details" />
+      <view name="threater_add_list_entries" label="Add Entries" />
+      <view name="threater_apply_policies" label="Apply to Policies" />
+      <view name="threater_create_policy_from_list" label="Create Policy During List Creation" />
+      <view name="threater_manage_list_entries" label="Add &amp; Remove List Entries" />
+    </collection>
+
+  </collection>
+
+  <!-- ========================= -->
+  <!-- Enforce -->
+  <!-- ========================= -->
+  <collection label="Enforce">
+
+    <collection label="Enforcers">
+      <view name="threater_enforcers" label="Enforcers" />
+      <view name="threater_enforcer_status" label="Enforcer Status" />
+      <view name="threater_enforcer_health" label="Enforcer Health" />
+    </collection>
+
+    <collection label="Enforcement Configuration">
+      <view name="threater_enforcement_policies" label="Policies" />
+      <view name="threater_enforcement_scope" label="Enforcement Scope" />
+      <view name="threater_enforcement_state" label="Enforcement State" />
+    </collection>
+
+  </collection>
+
+  <!-- ========================= -->
+  <!-- Settings -->
+  <!-- ========================= -->
+  <collection label="Settings">
+
+    <collection label="System">
+      <view name="threater_syslog" label="Syslog" />
+      <view name="threater_access_control" label="Access Control" />
+      <view name="threater_bridges" label="Bridges" />
+      <view name="threater_ntp" label="NTP" />
+    </collection>
+
+    <collection label="Device Configuration">
+      <view name="threater_interface_settings" label="Interface Settings" />
+      <view name="threater_dhcp_settings" label="DHCP Settings" />
+      <view name="threater_wifi_configuration" label="WiFi Configuration" />
+    </collection>
+
+    <collection label="Enforce Software">
+      <view name="threater_update_now" label="Update Now" />
+      <view name="threater_schedule_update" label="Schedule Update" />
+      <view name="threater_cancel_update" label="Cancel Scheduled Update" />
+      <view name="threater_revert_build" label="Revert to Previous Build" />
+    </collection>
+
+  </collection>
+
+  <!-- ========================= -->
+  <!-- Help -->
+  <!-- ========================= -->
+  <collection label="Help">
+    <view name="threater_support" label="Support &amp; Troubleshooting" />
+  </collection>
+
+</nav>
