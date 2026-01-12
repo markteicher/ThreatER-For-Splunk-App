@@ -1,0 +1,126 @@
+<!--
+  File: threater_support.xml
+  ThreatER for Splunk App
+  Help → Support & Troubleshooting
+-->
+
+<dashboard version="1.1">
+  <label>Support &amp; Troubleshooting</label>
+
+  <description>
+    Operational guidance, troubleshooting steps, and reference links for the
+    ThreatER for Splunk App.
+  </description>
+
+  <!-- ========================= -->
+  <!-- QUICK STATUS CHECKS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>
+        <icon>info-circle</icon>
+        Quick Health Checks
+      </title>
+      <html>
+        <ul>
+          <li>Confirm the ThreatER API is reachable from the Splunk instance</li>
+          <li>Verify API key permissions</li>
+          <li>Ensure required inputs are enabled</li>
+          <li>Check proxy connectivity (if configured)</li>
+        </ul>
+      </html>
+    </panel>
+
+    <panel>
+      <title>
+        <icon>heartbeat</icon>
+        Ingestion Health
+      </title>
+      <single>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:health
+            | stats latest(status) AS status
+          </query>
+        </search>
+        <option name="underLabel">Last reported status</option>
+      </single>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- COMMON ISSUES -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>
+        <icon>alert-circle</icon>
+        Common Issues
+      </title>
+      <html>
+        <ul>
+          <li><strong>No data appearing</strong>: Validate API key and enabled inputs</li>
+          <li><strong>Authentication errors</strong>: Re-enter API key and save setup</li>
+          <li><strong>Rate limiting</strong>: Increase collection intervals</li>
+          <li><strong>Proxy failures</strong>: Verify proxy credentials and SSL inspection</li>
+        </ul>
+      </html>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- LOGGING & DIAGNOSTICS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>
+        <icon>search</icon>
+        Diagnostic Searches
+      </title>
+      <html>
+        <p><strong>Check ingestion activity:</strong></p>
+        <pre>
+index=security_threater
+| stats count by sourcetype
+        </pre>
+
+        <p><strong>Check errors:</strong></p>
+        <pre>
+index=_internal sourcetype=splunkd component=ModularInputs
+        </pre>
+      </html>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- REFERENCES -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>
+        <icon>external-link</icon>
+        References &amp; Documentation
+      </title>
+      <html>
+        <ul>
+          <li>
+            <a href="https://portal.threater.com/api/v3/" target="_blank">
+              ThreatER API v3 Documentation
+            </a>
+          </li>
+          <li>
+            <a href="https://support.threater.com/" target="_blank">
+              ThreatER Support Portal
+            </a>
+          </li>
+          <li>
+            <a href="https://docs.splunk.com" target="_blank">
+              Splunk Documentation
+            </a>
+          </li>
+        </ul>
+      </html>
+    </panel>
+  </row>
+
+</dashboard>
