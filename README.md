@@ -271,6 +271,193 @@ The ThreatER for Splunk App mirrors the ThreatER portal navigation and is organi
 
 ---
 
+# ThreatER API v3 — Complete Endpoint List
+
+Base URL:
+https://portal.threater.com/api/v3/
+
+---
+
+## Collect
+
+### Lists
+- GET /lists
+- GET /lists/{list_id}
+- POST /lists
+- PUT /lists/{list_id}
+- DELETE /lists/{list_id}
+
+### List Types
+- GET /list-types
+
+### Allow Lists
+- GET /lists?type=allow
+
+### Block Lists
+- GET /lists?type=block
+
+### Threat Lists
+- GET /lists?type=threat
+
+### List Entries
+- GET /lists/{list_id}/entries
+- POST /lists/{list_id}/entries
+- DELETE /lists/{list_id}/entries/{entry_id}
+
+### List → Policy Association
+- POST /lists/{list_id}/policies
+- DELETE /lists/{list_id}/policies/{policy_id}
+
+---
+
+## Collect → Plugins (External Lists)
+- GET /plugins
+- GET /plugins/{plugin_id}
+- POST /plugins
+- PUT /plugins/{plugin_id}
+- DELETE /plugins/{plugin_id}
+- POST /plugins/{plugin_id}/sync
+
+---
+
+## Enforce
+
+### Enforcers
+- GET /enforcers
+- GET /enforcers/{enforcer_id}
+- GET /enforcers/{enforcer_id}/status
+- GET /enforcers/{enforcer_id}/health
+
+### Enforcement Policies
+- GET /policies
+- GET /policies/{policy_id}
+- POST /policies
+- PUT /policies/{policy_id}
+- DELETE /policies/{policy_id}
+
+---
+
+## Enforce → Networks
+- GET /networks
+- GET /networks/{network_id}
+- POST /networks
+- PUT /networks/{network_id}
+- DELETE /networks/{network_id}
+- POST /networks/{network_id}/duplicate
+
+### Network IP Management
+- GET /networks/{network_id}/ips
+- POST /networks/{network_id}/ips
+- DELETE /networks/{network_id}/ips/{ip_id}
+
+---
+
+## Enforce → Ports
+- GET /ports
+- POST /ports
+- PUT /ports/{port_id}
+- DELETE /ports/{port_id}
+
+---
+
+## Administration
+
+### Users
+- GET /users
+- GET /users/{user_id}
+- POST /users
+- PUT /users/{user_id}
+- DELETE /users/{user_id}
+
+### User Credentials & Roles
+- PUT /users/{user_id}/password
+- PUT /users/{user_id}/role
+- PUT /users/{user_id}/status
+
+---
+
+## Administration → Subscriptions
+- GET /subscriptions
+- GET /subscriptions/{subscription_id}
+
+---
+
+## Command Logs
+- GET /command-logs
+- GET /command-logs/{command_id}
+
+---
+
+## IOC Search
+- POST /ioc/search
+- GET /ioc/results/{search_id}
+- GET /ioc/premium-intelligence
+
+---
+
+## Reports
+
+### Standard Reports
+- GET /reports/allowed-blocked
+- GET /reports/reason-summary
+- GET /reports/category-summary
+- GET /reports/top-countries
+- GET /reports/top-asns
+- GET /reports/countries-by-category
+- GET /reports/asns-by-category
+
+### Report Builder
+- POST /reports/builder
+- GET /reports/builder/{report_id}
+
+### Scheduled Reports
+- GET /reports/scheduled
+- POST /reports/scheduled
+- PUT /reports/scheduled/{report_id}
+- DELETE /reports/scheduled/{report_id}
+
+---
+
+## Subscriptions (Operational)
+- GET /events/blocks
+- GET /events/unexpected-blocks
+- GET /mitigations
+- PUT /thresholds
+- POST /allow-list/enable
+- POST /allow-list/manual
+
+---
+
+## Settings
+
+### System
+- GET /settings/syslog
+- PUT /settings/syslog
+- GET /settings/access-control
+- GET /settings/bridges
+- GET /settings/ntp
+
+### Device Configuration
+- GET /device/interfaces
+- PUT /device/interfaces
+- GET /device/dhcp
+- PUT /device/dhcp
+- GET /device/wifi
+- PUT /device/wifi
+
+### Enforce Software
+- POST /software/update
+- POST /software/schedule-update
+- POST /software/cancel-update
+- POST /software/revert
+
+---
+
+## Help / Platform
+- GET /health
+- GET /status
+- GET /version
+
 ## 📦 Requirements
 
 - Splunk Enterprise or Splunk Cloud
