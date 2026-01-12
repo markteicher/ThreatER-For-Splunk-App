@@ -1,64 +1,117 @@
+<!-- default/data/ui/views/threater_list_types.xml -->
 <form version="1.1">
   <label>List Types</label>
 
-  <!-- ========================= -->
-  <!-- LIST TYPE COUNTS -->
-  <!-- ========================= -->
+  <search>
+    <query>
+      index=security_threater (sourcetype=threater:allow_list OR sourcetype=threater:block_list OR sourcetype=threater:threat_list)
+      | eval list_type=case(
+          sourcetype="threater:allow_list","Allow Lists",
+          sourcetype="threater:block_list","Block Lists",
+          sourcetype="threater:threat_list","Threat Lists",
+          1=1,"Other"
+        )
+    </query>
+    <earliest>-24h</earliest>
+    <latest>now</latest>
+  </search>
+
+  <fieldset submitButton="false">
+    <input type="dropdown" token="list_type_tok">
+      <label>List Type</label>
+      <choice value="*">All</choice>
+      <choice value="Allow Lists">Allow Lists</choice>
+      <choice value="Block Lists">Block Lists</choice>
+      <choice value="Threat Lists">Threat Lists</choice>
+      <default>*</default>
+    </input>
+
+    <input type="text" token="name_tok">
+      <label>Name contains</label>
+      <default></default>
+    </input>
+  </fieldset>
+
   <row>
     <panel>
       <single>
-        <title>Allow Lists</title>
+        <title>Total Lists</title>
         <search>
           <query>
-            index=security_threater sourcetype=threater:allow_list
-            | stats count AS total
+            index=security_threater (sourcetype=threater:allow_list OR sourcetype=threater:block_list OR sourcetype=threater:threat_list)
+            | eval list_type=case(
+                sourcetype="threater:allow_list","Allow Lists",
+                sourcetype="threater:block_list","Block Lists",
+                sourcetype="threater:threat_list","Threat Lists",
+                1=1,"Other"
+              )
+            | search list_type="$list_type_tok$"
+            | spath
+            | eval name=coalesce(name,'entry.list_name',"")
+            | eval name_lc=lower(name)
+            | search name_lc="*$name_tok$*"
+            | stats count as total
           </query>
         </search>
+        <option name="numberPrecision">0</option>
+        <option name="useThousandSeparators">true</option>
       </single>
     </panel>
 
     <panel>
-      <single>
-        <title>Block Lists</title>
+      <chart>
+        <title>Lists by Type</title>
         <search>
           <query>
-            index=security_threater sourcetype=threater:block_list
-            | stats count AS total
+            index=security_threater (sourcetype=threater:allow_list OR sourcetype=threater:block_list OR sourcetype=threater:threat_list)
+            | eval list_type=case(
+                sourcetype="threater:allow_list","Allow Lists",
+                sourcetype="threater:block_list","Block Lists",
+                sourcetype="threater:threat_list","Threat Lists",
+                1=1,"Other"
+              )
+            | search list_type="$list_type_tok$"
+            | spath
+            | eval name=coalesce(name,'entry.list_name',"")
+            | eval name_lc=lower(name)
+            | search name_lc="*$name_tok$*"
+            | stats count as count by list_type
+            | sort - count
           </query>
         </search>
-      </single>
-    </panel>
-
-    <panel>
-      <single>
-        <title>Threat Lists</title>
-        <search>
-          <query>
-            index=security_threater sourcetype=threater:threat_list
-            | stats count AS total
-          </query>
-        </search>
-      </single>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
     </panel>
   </row>
 
-  <!-- ========================= -->
-  <!-- THREAT LIST CATEGORIES -->
-  <!-- /threat-lists/categories -->
-  <!-- ========================= -->
   <row>
     <panel>
       <table>
-        <title>Threat List Categories</title>
+        <title>Lists (Latest Seen)</title>
         <search>
           <query>
-            index=security_threater sourcetype=threater:threat_list_category
+            index=security_threater (sourcetype=threater:allow_list OR sourcetype=threater:block_list OR sourcetype=threater:threat_list)
+            | eval list_type=case(
+                sourcetype="threater:allow_list","Allow Lists",
+                sourcetype="threater:block_list","Block Lists",
+                sourcetype="threater:threat_list","Threat Lists",
+                1=1,"Other"
+              )
+            | search list_type="$list_type_tok$"
             | spath
-            | table code name description
-            | sort name
+            | eval uuid=coalesce(uuid,id,'entry.list_id')
+            | eval name=coalesce(name,'entry.list_name')
+            | eval updated_at=coalesce(updated_at,last_updated,created_at)
+            | eval name_lc=lower(name)
+            | search name_lc="*$name_tok$*"
+            | stats latest(updated_at) as updated_at latest(_time) as last_seen by list_type uuid name
+            | eval last_seen=strftime(last_seen, "%Y-%m-%d %H:%M:%S UTC")
+            | sort 0 list_type name
+            | fields list_type name uuid updated_at last_seen
           </query>
         </search>
-        <option name="drilldown">none</option>
+        <option name="count">25</option>
         <option name="wrap">true</option>
       </table>
     </panel>
