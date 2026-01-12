@@ -4,17 +4,6 @@
 """
 ThreatER for Splunk App
 Modular Input: User Activity
-
-Source:
-- ThreatER API v3
-  https://portal.threater.com/api/v3/
-
-Purpose:
-- Ingest user activity and authentication events
-- Track administrative and non-administrative user actions
-- Support audit, compliance, and behavioral analysis
-- Preserve raw activity payloads
-- Maintain incremental ingestion using checkpoints
 """
 
 import sys
@@ -44,10 +33,7 @@ class ThreatERUserActivityInput(ThreatERModularInput):
         )
         last_checkpoint = checkpoint.get()
 
-        params = {
-            "limit": 200
-        }
-
+        params = {"limit": 200}
         if last_checkpoint:
             params["created_after"] = last_checkpoint
 
@@ -62,8 +48,7 @@ class ThreatERUserActivityInput(ThreatERModularInput):
             response = self.api.get(ENDPOINT, params=params)
 
             records = response.get("data", [])
-            meta = response.get("meta", {})
-            next_cursor = meta.get("next_cursor")
+            next_cursor = response.get("meta", {}).get("next_cursor")
 
             for record in records:
                 self.write_event(
@@ -79,8 +64,7 @@ class ThreatERUserActivityInput(ThreatERModularInput):
                 )
 
                 if timestamp and (
-                    not newest_timestamp
-                    or timestamp > newest_timestamp
+                    not newest_timestamp or timestamp > newest_timestamp
                 ):
                     newest_timestamp = timestamp
 
@@ -92,7 +76,7 @@ class ThreatERUserActivityInput(ThreatERModularInput):
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
             self.logger.info(
                 f"Checkpoint updated to {newest_timestamp}"
