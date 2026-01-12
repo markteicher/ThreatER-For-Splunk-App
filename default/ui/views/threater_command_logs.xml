@@ -37,11 +37,88 @@
   </fieldset>
 
   <!-- ========================= -->
-  <!-- COMMAND LOG TABLE -->
+  <!-- INSIGHT PANELS -->
+  <!-- ========================= -->
+  <row>
+
+    <!-- UI vs API -->
+    <panel>
+      <title>UI vs API Usage</title>
+      <chart>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:command_log
+| spath
+| eval request_type=if(isUiRequest=true, "UI", "API")
+| stats count by request_type
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+
+    <!-- Top Users -->
+    <panel>
+      <title>Top Users by Actions</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:command_log
+| spath
+| stats count AS actions by user
+| sort - actions
+| head 10
+          </query>
+        </search>
+        <option name="count">10</option>
+      </table>
+    </panel>
+
+  </row>
+
+  <!-- ========================= -->
+  <!-- SENSITIVE ACTIONS -->
   <!-- ========================= -->
   <row>
     <panel>
-      <title>ThreatER Command Logs</title>
+      <title>Sensitive Actions Spotlight</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:command_log
+| spath
+| eval action_lc=lower(action)
+
+| where
+    match(action_lc, "delete|disable|revoke|reset|remove|update|change")
+
+| table
+    datetime
+    user
+    module
+    action
+    message
+    isUiRequest
+
+| sort - datetime
+          </query>
+        </search>
+
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+      </table>
+
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- FULL COMMAND LOGS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>All Command Logs</title>
 
       <table>
         <search>
