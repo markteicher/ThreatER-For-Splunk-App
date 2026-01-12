@@ -30,11 +30,11 @@ from splunklib.modularinput import (
     Script,
     Event,
     Scheme,
-    Argument,
 )
 
 
 SOURCETYPE = "threater:ingestion_health"
+INPUT_NAME = "threater_ingestion_health"
 
 
 class ThreatERIngestionHealth(Script):
@@ -61,9 +61,10 @@ class ThreatERIngestionHealth(Script):
         }
 
         try:
-            # Enumerate enabled inputs (best-effort visibility)
+            # Enumerate enabled inputs (excluding this health input itself)
             for stanza_name in inputs.inputs:
-                health_event["details"]["inputs_checked"].append(stanza_name)
+                if stanza_name != INPUT_NAME:
+                    health_event["details"]["inputs_checked"].append(stanza_name)
 
         except Exception as exc:
             health_event["status"] = "error"
