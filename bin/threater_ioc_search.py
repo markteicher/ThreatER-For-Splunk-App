@@ -10,11 +10,18 @@ Source:
   https://portal.threater.com/api/v3/
 
 Purpose:
-- Retrieve IOC search results (IPs, domains, indicators)
-- Preserve raw IOC response payloads
-- Support premium intelligence visibility
-- Enable investigation and enrichment workflows in Splunk
-- Maintain incremental ingestion via checkpointing
+- Ingest IOC search results (IPs, domains, indicators)
+- Capture verdicts, categories, confidence, and source attribution
+- Support IOC Search dashboards and investigations
+- Preserve raw payloads for audit and pivoting
+
+Design:
+- Raw JSON ingestion
+- Cursor-based pagination
+- Checkpointing via updated_at
+- Proxy + SSL support
+- No enrichment
+- No transformation
 """
 
 import sys
@@ -26,26 +33,26 @@ from threater_common import (
     ThreatERAPIError,
 )
 
-ENDPOINT = "/ioc/search"
-SOURCETYPE = "threater:ioc_search"
+ENDPOINT = "/ioc/results"
+SOURCETYPE = "threater:ioc_result"
 
 
-class ThreatERIOCSearchInput(ThreatERModularInput):
+class ThreatERIOCResultsInput(ThreatERModularInput):
     """
     Modular input for ThreatER IOC search results
     """
 
     def collect(self):
-        self.logger.info("Starting ThreatER IOC search ingestion")
+        self.logger.info("Starting ThreatER IOC results ingestion")
 
         checkpoint = ThreatERCheckpoint(
             self,
-            key="ioc_search_last_timestamp"
+            key="ioc_results_last_updated"
         )
         last_checkpoint = checkpoint.get()
 
         params = {
-            "limit": 200,
+            "limit": 200
         }
 
         if last_checkpoint:
@@ -72,20 +79,20 @@ class ThreatERIOCSearchInput(ThreatERModularInput):
                 )
                 total_records += 1
 
-                timestamp = (
+                updated_at = (
                     record.get("updated_at")
-                    or record.get("created_at")
+                    or record.get("last_seen")
                     or record.get("timestamp")
                 )
 
-                if timestamp and (
+                if updated_at and (
                     not newest_timestamp
-                    or timestamp > newest_timestamp
+                    or updated_at > newest_timestamp
                 ):
-                    newest_timestamp = timestamp
+                    newest_timestamp = updated_at
 
             self.logger.info(
-                f"Fetched {len(records)} IOC results "
+                f"Fetched {len(records)} IOC result records "
                 f"(total so far: {total_records})"
             )
 
@@ -99,15 +106,15 @@ class ThreatERIOCSearchInput(ThreatERModularInput):
             )
 
         self.logger.info(
-            f"ThreatER IOC search ingestion complete — "
+            f"ThreatER IOC results ingestion complete — "
             f"{total_records} records ingested"
         )
 
 
 def main():
     try:
-        runner = ThreatERIOCSearchInput(
-            input_name="threater_ioc_search",
+        runner = ThreatERIOCResultsInput(
+            input_name="threater_ioc_results",
             sourcetype=SOURCETYPE
         )
         runner.run()
