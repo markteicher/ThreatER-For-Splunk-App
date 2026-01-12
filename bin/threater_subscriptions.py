@@ -69,7 +69,11 @@ class ThreatERSubscriptionsInput(ThreatERModularInput):
                 )
                 total_records += 1
 
-                updated_at = record.get("updated_at") or record.get("last_updated")
+                updated_at = (
+                    record.get("updated_at")
+                    or record.get("last_updated")
+                )
+
                 if updated_at and (
                     not newest_timestamp
                     or updated_at > newest_timestamp
@@ -84,7 +88,7 @@ class ThreatERSubscriptionsInput(ThreatERModularInput):
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
             self.logger.info(
                 f"Checkpoint updated to {newest_timestamp}"
