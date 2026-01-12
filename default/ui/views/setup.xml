@@ -35,6 +35,7 @@
     <input type="checkbox" token="verify_ssl">
       <label>Verify SSL Certificates</label>
       <choice value="true">Enable SSL Verification</choice>
+      <default>true</default>
     </input>
 
   </fieldset>
@@ -81,27 +82,27 @@
     </input>
 
     <input type="checkbox" token="collect_enforcers">
-      <label>Enforcers & Enforcement Status</label>
+      <label>Enforcers &amp; Enforcement Status</label>
       <choice value="true">Enable</choice>
     </input>
 
     <input type="checkbox" token="collect_networks">
-      <label>Networks & Ports</label>
+      <label>Networks &amp; Ports</label>
       <choice value="true">Enable</choice>
     </input>
 
     <input type="checkbox" token="collect_users">
-      <label>Users & Administration</label>
+      <label>Users &amp; Administration</label>
       <choice value="true">Enable</choice>
     </input>
 
     <input type="checkbox" token="collect_reports">
-      <label>Reports & Scheduled Reports</label>
+      <label>Reports &amp; Scheduled Reports</label>
       <choice value="true">Enable</choice>
     </input>
 
     <input type="checkbox" token="collect_events">
-      <label>Block Events & Subscriptions</label>
+      <label>Block Events &amp; Subscriptions</label>
       <choice value="true">Enable</choice>
     </input>
 
