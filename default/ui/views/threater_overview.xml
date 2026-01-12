@@ -1,0 +1,138 @@
+<dashboard version="1.1">
+  <label>ThreatER Overview</label>
+  <description>
+    Operational overview of ThreatER data ingestion, enforcement activity,
+    IOC searches, and administrative actions.
+  </description>
+
+  <!-- ===================================================== -->
+  <!-- GLOBAL TIME -->
+  <!-- ===================================================== -->
+  <timepicker>
+    <default>
+      <earliest>-24h@h</earliest>
+      <latest>now</latest>
+    </default>
+  </timepicker>
+
+  <!-- ===================================================== -->
+  <!-- INGESTION HEALTH -->
+  <!-- ===================================================== -->
+  <row>
+    <panel>
+      <title>Ingestion Health (Last Run)</title>
+      <table>
+        <search>
+          <query>
+            `threater_index`
+            sourcetype=threater:ingestion_health
+            | sort - _time
+            | head 1
+            | table _time status message
+          </query>
+          <earliest>-1h</earliest>
+          <latest>now</latest>
+        </search>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ===================================================== -->
+  <!-- EVENT VOLUME -->
+  <!-- ===================================================== -->
+  <row>
+    <panel>
+      <title>Event Volume by Sourcetype</title>
+      <chart>
+        <search>
+          <query>
+            `threater_events`
+            | timechart span=5m count by sourcetype
+          </query>
+        </search>
+        <option name="charting.chart">area</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ===================================================== -->
+  <!-- ENFORCEMENT ACTIVITY -->
+  <!-- ===================================================== -->
+  <row>
+    <panel>
+      <title>Block &amp; Unexpected Block Activity</title>
+      <chart>
+        <search>
+          <query>
+            index=security_threater
+            sourcetype IN (threater:block_event, threater:unexpected_block)
+            | timechart span=5m count by sourcetype
+          </query>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ===================================================== -->
+  <!-- IOC SEARCH ACTIVITY -->
+  <!-- ===================================================== -->
+  <row>
+    <panel>
+      <title>IOC Search Activity</title>
+      <chart>
+        <search>
+          <query>
+            index=security_threater
+            sourcetype IN (threater:ioc_search, threater:ioc_search_request, threater:ioc_result)
+            | timechart span=5m count by sourcetype
+          </query>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ===================================================== -->
+  <!-- ADMIN / AUDIT -->
+  <!-- ===================================================== -->
+  <row>
+    <panel>
+      <title>Administrative Activity</title>
+      <table>
+        <search>
+          <query>
+            `threater_admin_activity`
+            | sort - _time
+            | head 20
+            | table _time sourcetype user action message
+          </query>
+        </search>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ===================================================== -->
+  <!-- RECENT REPORTS -->
+  <!-- ===================================================== -->
+  <row>
+    <panel>
+      <title>Recent Reports</title>
+      <table>
+        <search>
+          <query>
+            index=security_threater
+            sourcetype=threater:report
+            | sort - _time
+            | head 10
+            | table _time report_name created_at status
+          </query>
+        </search>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
