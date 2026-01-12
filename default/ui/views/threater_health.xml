@@ -1,12 +1,10 @@
 <form version="1.1">
-  <label>Platform Health</label>
+  <label>Health</label>
 
   <description>
-    Real-time health status of the ThreatER platform, including system resources
-    and backend service availability.
+    Real-time health status of ThreatER services and system resources.
   </description>
 
-  <!-- No time picker: this is point-in-time health -->
   <search>
     <query>
       index=security_threater sourcetype=threater:health*
@@ -15,13 +13,10 @@
     <latest>now</latest>
   </search>
 
-  <!-- ========================= -->
-  <!-- PLATFORM STATUS -->
-  <!-- ========================= -->
   <row>
     <panel>
       <single>
-        <title>Overall Platform Status</title>
+        <title>Overall Status</title>
         <search>
           <query>
             index=security_threater sourcetype=threater:health
@@ -38,9 +33,6 @@
     </panel>
   </row>
 
-  <!-- ========================= -->
-  <!-- CPU & MEMORY -->
-  <!-- ========================= -->
   <row>
     <panel>
       <single>
@@ -77,13 +69,10 @@
     </panel>
   </row>
 
-  <!-- ========================= -->
-  <!-- BACKEND SERVICES -->
-  <!-- ========================= -->
   <row>
     <panel>
       <single>
-        <title>SQL Backend</title>
+        <title>SQL</title>
         <search>
           <query>
             index=security_threater sourcetype=threater:health_sql
@@ -100,7 +89,7 @@
 
     <panel>
       <single>
-        <title>MongoDB Backend</title>
+        <title>MongoDB</title>
         <search>
           <query>
             index=security_threater sourcetype=threater:health_mongo
@@ -117,7 +106,7 @@
 
     <panel>
       <single>
-        <title>Cassandra Backend</title>
+        <title>Cassandra</title>
         <search>
           <query>
             index=security_threater sourcetype=threater:health_cassandra
@@ -132,5 +121,4 @@
       </single>
     </panel>
   </row>
-
 </form>
