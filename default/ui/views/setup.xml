@@ -1,28 +1,30 @@
-<!-- default/data/ui/views/setup.xml -->
-<!-- ThreatER for Splunk App -->
-<!-- Setup & Configuration -->
+<!--
+  default/data/ui/views/setup.xml
+  ThreatER for Splunk App
+  Setup & Configuration
+-->
 
 <form version="1.1">
   <label>Setup</label>
 
   <description>
-    Configure ThreatER API access, proxy settings, and data ingestion
-    for the ThreatER preemptive threat filtering platform.
+    Configure ThreatER API access, proxy settings, and data collection options.
+    These settings are required before enabling modular inputs.
   </description>
 
   <!-- ========================= -->
-  <!-- Configuration Inputs -->
+  <!-- API Configuration -->
   <!-- ========================= -->
   <fieldset submitButton="true">
+    <legend>ThreatER API Configuration</legend>
 
-    <!-- API Configuration -->
     <input type="text" token="api_base_url" required="true">
-      <label>ThreatER API Base URL</label>
+      <label>API Base URL</label>
       <default>https://portal.threater.com/api/v3</default>
     </input>
 
     <input type="password" token="api_key" required="true">
-      <label>ThreatER API Key</label>
+      <label>API Key</label>
     </input>
 
     <input type="text" token="request_timeout">
@@ -30,41 +32,90 @@
       <default>30</default>
     </input>
 
-    <!-- Index Configuration -->
-    <input type="text" token="target_index">
-      <label>Target Index</label>
-      <default>security_threater</default>
+    <input type="checkbox" token="verify_ssl">
+      <label>Verify SSL Certificates</label>
+      <choice value="true">Enable SSL Verification</choice>
     </input>
 
-    <!-- Proxy Configuration -->
-    <input type="checkbox" token="use_proxy">
-      <label>Proxy Configuration</label>
-      <choice value="true">Enable Proxy</choice>
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- Proxy Configuration -->
+  <!-- ========================= -->
+  <fieldset submitButton="false">
+    <legend>Proxy Configuration (Optional)</legend>
+
+    <input type="checkbox" token="proxy_enabled">
+      <label>Enable Proxy</label>
+      <choice value="true">Use Proxy</choice>
     </input>
 
-    <input type="text" token="proxy_url" depends="$use_proxy$">
+    <input type="text" token="proxy_url" depends="$proxy_enabled$">
       <label>Proxy URL</label>
     </input>
 
-    <input type="text" token="proxy_username" depends="$use_proxy$">
+    <input type="text" token="proxy_username" depends="$proxy_enabled$">
       <label>Proxy Username</label>
     </input>
 
-    <input type="password" token="proxy_password" depends="$use_proxy$">
+    <input type="password" token="proxy_password" depends="$proxy_enabled$">
       <label>Proxy Password</label>
     </input>
 
   </fieldset>
 
   <!-- ========================= -->
-  <!-- Submit Handler -->
+  <!-- Data Collection -->
+  <!-- ========================= -->
+  <fieldset submitButton="false">
+    <legend>Data Collection</legend>
+
+    <input type="checkbox" token="collect_lists">
+      <label>Lists (Allow, Block, Threat)</label>
+      <choice value="true">Enable</choice>
+    </input>
+
+    <input type="checkbox" token="collect_plugins">
+      <label>Plugins / External Lists</label>
+      <choice value="true">Enable</choice>
+    </input>
+
+    <input type="checkbox" token="collect_enforcers">
+      <label>Enforcers & Enforcement Status</label>
+      <choice value="true">Enable</choice>
+    </input>
+
+    <input type="checkbox" token="collect_networks">
+      <label>Networks & Ports</label>
+      <choice value="true">Enable</choice>
+    </input>
+
+    <input type="checkbox" token="collect_users">
+      <label>Users & Administration</label>
+      <choice value="true">Enable</choice>
+    </input>
+
+    <input type="checkbox" token="collect_reports">
+      <label>Reports & Scheduled Reports</label>
+      <choice value="true">Enable</choice>
+    </input>
+
+    <input type="checkbox" token="collect_events">
+      <label>Block Events & Subscriptions</label>
+      <choice value="true">Enable</choice>
+    </input>
+
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- Submit Help -->
   <!-- ========================= -->
   <row>
     <panel>
       <html>
         <p>
-          Click <strong>Submit</strong> to save configuration and enable
-          ThreatER data collection.
+          Click <strong>Save</strong> to store configuration securely.
+          After saving, validate connectivity and enable the desired modular inputs.
         </p>
       </html>
     </panel>
