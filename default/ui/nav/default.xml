@@ -61,7 +61,6 @@
       <view name="threater_enforcement_state" label="Enforcement State" />
     </collection>
 
-    <!-- Enforce → Networks -->
     <collection label="Networks">
       <view name="threater_networks_create" label="Create Networks" />
       <view name="threater_network_details" label="Network Details" />
@@ -73,7 +72,6 @@
       <view name="threater_network_duplicate" label="Duplicate Network" />
     </collection>
 
-    <!-- Enforce → Ports -->
     <collection label="Ports">
       <view name="threater_ports_add" label="Add Ports" />
       <view name="threater_ports_edit" label="Edit Ports" />
