@@ -14,6 +14,7 @@ Purpose:
 - Capture verdicts, categories, confidence, and source attribution
 - Support IOC Search dashboards and investigations
 - Preserve raw payloads for audit and pivoting
+- Incremental ingestion via checkpointing
 """
 
 import sys
@@ -37,16 +38,10 @@ class ThreatERIOCResultsInput(ThreatERModularInput):
     def collect(self):
         self.logger.info("Starting ThreatER IOC results ingestion")
 
-        checkpoint = ThreatERCheckpoint(
-            self,
-            key="ioc_results_last_updated"
-        )
+        checkpoint = ThreatERCheckpoint(self, key="ioc_results_last_updated")
         last_checkpoint = checkpoint.get()
 
-        params = {
-            "limit": 200
-        }
-
+        params = {"limit": 200}
         if last_checkpoint:
             params["updated_after"] = last_checkpoint
 
@@ -60,9 +55,9 @@ class ThreatERIOCResultsInput(ThreatERModularInput):
 
             response = self.api.get(ENDPOINT, params=params)
 
-            records = response.get("data", [])
-            meta = response.get("meta", {})
-            next_cursor = meta.get("next_cursor")
+            records = response.get("data") or []
+            meta = response.get("meta") or {}
+            next_cursor = meta.get("next_cursor") or meta.get("nextCursor")
 
             for record in records:
                 self.write_event(
@@ -71,17 +66,15 @@ class ThreatERIOCResultsInput(ThreatERModularInput):
                 )
                 total_records += 1
 
-                timestamp = (
+                record_ts = (
                     record.get("updated_at")
+                    or record.get("last_updated")
                     or record.get("last_seen")
                     or record.get("timestamp")
                 )
 
-                if timestamp and (
-                    not newest_timestamp
-                    or timestamp > newest_timestamp
-                ):
-                    newest_timestamp = timestamp
+                if record_ts and (not newest_timestamp or record_ts > newest_timestamp):
+                    newest_timestamp = record_ts
 
             self.logger.info(
                 f"Fetched {len(records)} IOC result records "
@@ -91,11 +84,11 @@ class ThreatERIOCResultsInput(ThreatERModularInput):
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
-            self.logger.info(
-                f"Checkpoint updated to {newest_timestamp}"
-            )
+            self.logger.info(f"Checkpoint updated to {newest_timestamp}")
+        else:
+            self.logger.info("No checkpoint update required")
 
         self.logger.info(
             f"ThreatER IOC results ingestion complete — "
