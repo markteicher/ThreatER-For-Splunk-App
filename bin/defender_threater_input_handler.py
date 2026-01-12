@@ -2,45 +2,48 @@
 # -*- coding: utf-8 -*-
 
 """
+defender_threater_input_handler.py
+
 ThreatER for Splunk App
-Modular Input Management Handler
+Modular Input Management REST Handler
+
+Responsibilities:
+- List available modular inputs
+- Report input status
+- Enable / disable inputs
+- AppInspect & Splunk Cloud compliant
 """
 
 import json
-import sys
-import time
 
 from splunk.persistconn.application import PersistentServerConnectionApplication
 import splunk.entity as entity
 
 APP_NAME = "ThreatER_for_Splunk"
-CONF_INPUTS = "inputs"
+CONF_NAME = "inputs"
 
 
-class ThreatERInputHandler(PersistentServerConnectionApplication):
-
-    def __init__(self, command_line, command_arg):
-        super().__init__(command_line, command_arg)
+class DefenderThreatERInputHandler(PersistentServerConnectionApplication):
 
     # ------------------------------------------------------------------
-    # Dispatcher
+    # Entry point (Persistent REST handler)
     # ------------------------------------------------------------------
 
     def handle(self, in_string):
         try:
-            payload = json.loads(in_string)
+            payload = json.loads(in_string or "{}")
             action = payload.get("action", "list")
 
             if action == "list":
-                return self._list_inputs()
-            elif action == "status":
-                return self._input_status()
-            elif action == "enable":
-                return self._enable_input(payload)
-            elif action == "disable":
-                return self._disable_input(payload)
-            else:
-                return self._error("Unsupported action")
+                return self._respond(self._list_inputs())
+
+            if action == "status":
+                return self._respond(self._input_status())
+
+            if action == "edit":
+                return self._respond(self._edit_input(payload))
+
+            return self._error(f"Unsupported action: {action}")
 
         except Exception as e:
             return self._error(str(e))
@@ -51,10 +54,10 @@ class ThreatERInputHandler(PersistentServerConnectionApplication):
 
     def _list_inputs(self):
         inputs = self._get_inputs()
-        return self._success({
-            "inputs": inputs,
+        return {
+            "inputs": sorted(inputs.keys()),
             "count": len(inputs)
-        })
+        }
 
     def _input_status(self):
         inputs = self._get_inputs()
@@ -69,69 +72,49 @@ class ThreatERInputHandler(PersistentServerConnectionApplication):
                 "index": cfg.get("index")
             })
 
-        return self._success(status)
+        return status
 
-    def _enable_input(self, payload):
-        input_name = payload.get("name")
-        if not input_name:
-            return self._error("Missing input name")
+    def _edit_input(self, payload):
+        name = payload.get("name")
+        enabled = payload.get("enabled")
 
-        self._set_disabled(input_name, False)
-        return self._success({
-            "message": f"Input '{input_name}' enabled"
-        })
+        if not name:
+            raise ValueError("Missing input name")
 
-    def _disable_input(self, payload):
-        input_name = payload.get("name")
-        if not input_name:
-            return self._error("Missing input name")
+        if enabled is None:
+            raise ValueError("Missing enabled flag")
 
-        self._set_disabled(input_name, True)
-        return self._success({
-            "message": f"Input '{input_name}' disabled"
-        })
+        self._set_disabled(name, not bool(enabled))
+
+        return {
+            "message": f"Input '{name}' {'enabled' if enabled else 'disabled'}"
+        }
 
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
 
     def _get_inputs(self):
-        try:
-            return entity.getEntities(
-                f"configs/conf-{CONF_INPUTS}",
-                namespace=APP_NAME,
-                owner="nobody"
-            )
-        except Exception:
-            return {}
+        return entity.getEntities(
+            f"configs/conf-{CONF_NAME}",
+            namespace=APP_NAME,
+            owner="nobody"
+        )
 
-    def _set_disabled(self, input_name, disabled):
-        try:
-            entity.setEntity(
-                f"configs/conf-{CONF_INPUTS}",
-                input_name,
-                {"disabled": "1" if disabled else "0"},
-                namespace=APP_NAME,
-                owner="nobody"
-            )
-        except Exception as e:
-            raise RuntimeError(str(e))
+    def _set_disabled(self, name, disabled):
+        entity.setEntity(
+            f"configs/conf-{CONF_NAME}",
+            name,
+            {"disabled": "1" if disabled else "0"},
+            namespace=APP_NAME,
+            owner="nobody"
+        )
 
-    def _success(self, data):
-        return {
+    # ------------------------------------------------------------------
+    # REST Response Helpers
+    # ------------------------------------------------------------------
+
+    def _respond(self, payload):
+        return json.dumps({
             "status": 200,
-            "payload": json.dumps(data)
-        }
-
-    def _error(self, message):
-        return {
-            "status": 500,
-            "payload": json.dumps({
-                "status": "error",
-                "message": message
-            })
-        }
-
-
-if __name__ == "__main__":
-    ThreatERInputHandler(sys.argv, sys.stdin).handle(sys.stdin.read())
+            "payload": payload
