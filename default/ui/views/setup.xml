@@ -1,1 +1,128 @@
-test
+<!--
+  ThreatER for Splunk App
+  setup.xml
+-->
+
+<setup>
+
+  <header>
+    <title>ThreatER for Splunk — Setup</title>
+    <description>
+      Configure API access, proxy settings, and data collection options for the ThreatER platform.
+    </description>
+  </header>
+
+  <!-- ========================= -->
+  <!-- API Configuration -->
+  <!-- ========================= -->
+  <block title="ThreatER API Configuration">
+
+    <text>
+      Enter your ThreatER API connection details. These settings are required for data collection.
+    </text>
+
+    <input type="text" field="api_base_url">
+      <label>API Base URL</label>
+      <default>https://portal.threater.com/api/v3</default>
+    </input>
+
+    <input type="password" field="api_key">
+      <label>API Key</label>
+      <encrypted>true</encrypted>
+    </input>
+
+    <input type="text" field="request_timeout">
+      <label>Request Timeout (seconds)</label>
+      <default>30</default>
+    </input>
+
+    <input type="checkbox" field="verify_ssl">
+      <label>Verify SSL Certificates</label>
+      <default>true</default>
+    </input>
+
+  </block>
+
+  <!-- ========================= -->
+  <!-- Proxy Configuration -->
+  <!-- ========================= -->
+  <block title="Proxy Configuration (Optional)">
+
+    <input type="checkbox" field="proxy_enabled">
+      <label>Enable Proxy</label>
+      <default>false</default>
+    </input>
+
+    <input type="text" field="proxy_url">
+      <label>Proxy URL</label>
+    </input>
+
+    <input type="text" field="proxy_username">
+      <label>Proxy Username</label>
+    </input>
+
+    <input type="password" field="proxy_password">
+      <label>Proxy Password</label>
+      <encrypted>true</encrypted>
+    </input>
+
+  </block>
+
+  <!-- ========================= -->
+  <!-- Data Collection -->
+  <!-- ========================= -->
+  <block title="Data Collection">
+
+    <text>
+      Select which ThreatER data sources should be collected by Splunk.
+    </text>
+
+    <input type="checkbox" field="collect_lists">
+      <label>Lists (Allow, Block, Threat)</label>
+      <default>true</default>
+    </input>
+
+    <input type="checkbox" field="collect_plugins">
+      <label>Plugins / External Lists</label>
+      <default>true</default>
+    </input>
+
+    <input type="checkbox" field="collect_enforcers">
+      <label>Enforcers & Enforcement Status</label>
+      <default>true</default>
+    </input>
+
+    <input type="checkbox" field="collect_networks">
+      <label>Networks & Ports</label>
+      <default>true</default>
+    </input>
+
+    <input type="checkbox" field="collect_users">
+      <label>Users & Administration</label>
+      <default>false</default>
+    </input>
+
+    <input type="checkbox" field="collect_reports">
+      <label>Reports & Scheduled Reports</label>
+      <default>true</default>
+    </input>
+
+    <input type="checkbox" field="collect_events">
+      <label>Block Events & Subscriptions</label>
+      <default>true</default>
+    </input>
+
+  </block>
+
+  <!-- ========================= -->
+  <!-- Validation -->
+  <!-- ========================= -->
+  <block title="Validation">
+
+    <text>
+      After saving, validate connectivity to ensure the ThreatER API is reachable and credentials are correct.
+    </text>
+
+  </block>
+
+</setup>
