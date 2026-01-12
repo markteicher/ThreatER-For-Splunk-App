@@ -13,6 +13,14 @@ Purpose:
 - Ingest IOC search requests submitted to ThreatER
 - Track analyst searches, automation requests, and query parameters
 - Support auditability, investigations, and IOC lifecycle tracking
+
+Design:
+- Raw JSON ingestion
+- Cursor-based pagination
+- Checkpointing via created_at
+- Proxy + SSL support
+- No enrichment
+- No transformation
 """
 
 import sys
@@ -38,7 +46,7 @@ class ThreatERIOCSearchRequestsInput(ThreatERModularInput):
 
         checkpoint = ThreatERCheckpoint(
             self,
-            key="ioc_search_requests_last_updated"
+            key="ioc_search_requests_last_created"
         )
         last_checkpoint = checkpoint.get()
 
@@ -70,19 +78,19 @@ class ThreatERIOCSearchRequestsInput(ThreatERModularInput):
                 )
                 total_records += 1
 
-                timestamp = (
+                created_at = (
                     record.get("created_at")
                     or record.get("timestamp")
                 )
 
-                if timestamp and (
+                if created_at and (
                     not newest_timestamp
-                    or timestamp > newest_timestamp
+                    or created_at > newest_timestamp
                 ):
-                    newest_timestamp = timestamp
+                    newest_timestamp = created_at
 
             self.logger.info(
-                f"Fetched {len(records)} IOC search request records "
+                f"Fetched {len(records)} IOC search requests "
                 f"(total so far: {total_records})"
             )
 
