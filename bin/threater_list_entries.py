@@ -15,7 +15,7 @@ Design:
 - Raw JSON ingestion
 - Cursor-based pagination
 - Parent list correlation
-- Checkpointing via updated_at
+- Checkpointing via updated_at (global watermark only)
 - Proxy + SSL support
 - No enrichment
 - No transformation
@@ -49,8 +49,11 @@ class ThreatERListEntriesInput(ThreatERModularInput):
         )
         last_checkpoint = checkpoint.get()
 
-        list_params = {"limit": 200}
-        lists_response = self.api.get(LISTS_ENDPOINT, params=list_params)
+        # Retrieve all lists (best effort)
+        lists_response = self.api.get(
+            LISTS_ENDPOINT,
+            params={"limit": 200}
+        )
         lists = lists_response.get("data", [])
 
         total_events = 0
@@ -69,26 +72,22 @@ class ThreatERListEntriesInput(ThreatERModularInput):
                 f"{list_name} ({list_type})"
             )
 
-            entry_params = {"limit": 200}
-            if last_checkpoint:
-                entry_params["updated_after"] = last_checkpoint
-
+            params = {"limit": 200}
             next_cursor = None
 
             while True:
                 if next_cursor:
-                    entry_params["cursor"] = next_cursor
+                    params["cursor"] = next_cursor
 
                 endpoint = ENTRIES_ENDPOINT_TEMPLATE.format(
                     list_id=list_id
                 )
 
-                response = self.api.get(endpoint, params=entry_params)
+                response = self.api.get(endpoint, params=params)
                 entries = response.get("data", [])
                 next_cursor = response.get("meta", {}).get("next_cursor")
 
                 for entry in entries:
-                    # Attach list context without mutation
                     payload = {
                         "list_id": list_id,
                         "list_name": list_name,
@@ -117,7 +116,7 @@ class ThreatERListEntriesInput(ThreatERModularInput):
                 if not next_cursor:
                     break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
             self.logger.info(
                 f"Checkpoint updated to {newest_timestamp}"
