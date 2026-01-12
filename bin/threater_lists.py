@@ -43,13 +43,13 @@ class ThreatERListsInput(ThreatERModularInput):
     def collect(self):
         self.logger.info("Starting ThreatER list collection")
 
-        checkpoint = ThreatERCheckpoint(self, key="lists_last_updated")
+        checkpoint = ThreatERCheckpoint(
+            self,
+            key="lists_last_updated"
+        )
         last_checkpoint = checkpoint.get()
 
-        params = {
-            "limit": 200
-        }
-
+        params = {"limit": 200}
         if last_checkpoint:
             params["updated_after"] = last_checkpoint
 
@@ -87,7 +87,7 @@ class ThreatERListsInput(ThreatERModularInput):
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
             self.logger.info(
                 f"Checkpoint updated to {newest_timestamp}"
