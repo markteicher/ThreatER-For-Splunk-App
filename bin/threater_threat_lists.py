@@ -47,10 +47,7 @@ class ThreatERThreatListsInput(ThreatERModularInput):
         )
         last_checkpoint = checkpoint.get()
 
-        params = {
-            "limit": 200
-        }
-
+        params = {"limit": 200}
         if last_checkpoint:
             params["updated_after"] = last_checkpoint
 
@@ -88,7 +85,7 @@ class ThreatERThreatListsInput(ThreatERModularInput):
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
             self.logger.info(
                 f"Checkpoint updated to {newest_timestamp}"
