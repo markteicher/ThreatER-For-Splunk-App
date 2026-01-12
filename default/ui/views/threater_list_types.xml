@@ -1,0 +1,67 @@
+<form version="1.1">
+  <label>List Types</label>
+
+  <!-- ========================= -->
+  <!-- LIST TYPE COUNTS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <single>
+        <title>Allow Lists</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:allow_list
+            | stats count AS total
+          </query>
+        </search>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Block Lists</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:block_list
+            | stats count AS total
+          </query>
+        </search>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Threat Lists</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:threat_list
+            | stats count AS total
+          </query>
+        </search>
+      </single>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- THREAT LIST CATEGORIES -->
+  <!-- /threat-lists/categories -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Threat List Categories</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:threat_list_category
+            | spath
+            | table code name description
+            | sort name
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+
+</form>
