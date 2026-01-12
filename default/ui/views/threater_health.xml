@@ -1,0 +1,136 @@
+<form version="1.1">
+  <label>Platform Health</label>
+
+  <description>
+    Real-time health status of the ThreatER platform, including system resources
+    and backend service availability.
+  </description>
+
+  <!-- No time picker: this is point-in-time health -->
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:health*
+    </query>
+    <earliest>-5m</earliest>
+    <latest>now</latest>
+  </search>
+
+  <!-- ========================= -->
+  <!-- PLATFORM STATUS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <single>
+        <title>Overall Platform Status</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:health
+            | spath status
+            | eval status=upper(status)
+            | stats latest(status) AS status
+          </query>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="useColors">true</option>
+        <option name="rangeColors">["0x65A637","0xF7BC38","0xD93F3C"]</option>
+        <option name="rangeValues">["OK","DEGRADED","DOWN"]</option>
+      </single>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- CPU & MEMORY -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <single>
+        <title>CPU Utilization (%)</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:health_cpu
+            | spath percent
+            | stats latest(percent) AS percent
+          </query>
+        </search>
+        <option name="unit">%</option>
+        <option name="useColors">true</option>
+        <option name="rangeColors">["0x65A637","0xF7BC38","0xD93F3C"]</option>
+        <option name="rangeValues">[70,85]</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Memory Utilization (%)</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:health_memory
+            | spath percent
+            | stats latest(percent) AS percent
+          </query>
+        </search>
+        <option name="unit">%</option>
+        <option name="useColors">true</option>
+        <option name="rangeColors">["0x65A637","0xF7BC38","0xD93F3C"]</option>
+        <option name="rangeValues">[75,90]</option>
+      </single>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- BACKEND SERVICES -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <single>
+        <title>SQL Backend</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:health_sql
+            | spath status
+            | stats latest(status) AS status
+          </query>
+        </search>
+        <option name="useColors">true</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x65A637","0xD93F3C"]</option>
+        <option name="rangeValues">["UP","DOWN"]</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>MongoDB Backend</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:health_mongo
+            | spath status
+            | stats latest(status) AS status
+          </query>
+        </search>
+        <option name="useColors">true</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x65A637","0xD93F3C"]</option>
+        <option name="rangeValues">["UP","DOWN"]</option>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Cassandra Backend</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:health_cassandra
+            | spath status
+            | stats latest(status) AS status
+          </query>
+        </search>
+        <option name="useColors">true</option>
+        <option name="colorBy">value</option>
+        <option name="rangeColors">["0x65A637","0xD93F3C"]</option>
+        <option name="rangeValues">["UP","DOWN"]</option>
+      </single>
+    </panel>
+  </row>
+
+</form>
