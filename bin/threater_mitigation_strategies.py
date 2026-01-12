@@ -76,8 +76,7 @@ class ThreatERMitigationStrategiesInput(ThreatERModularInput):
                 )
 
                 if updated_at and (
-                    not newest_timestamp
-                    or updated_at > newest_timestamp
+                    not newest_timestamp or updated_at > newest_timestamp
                 ):
                     newest_timestamp = updated_at
 
@@ -89,7 +88,7 @@ class ThreatERMitigationStrategiesInput(ThreatERModularInput):
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
             self.logger.info(
                 f"Checkpoint updated to {newest_timestamp}"
