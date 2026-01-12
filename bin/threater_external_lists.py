@@ -13,7 +13,7 @@ Purpose:
 - Collect External / Integrated Threat Lists
 - Preserve raw API payloads
 - Support pagination, proxy, SSL
-- Maintain checkpointing
+- Maintain checkpointing for incremental ingestion
 - No enrichment, no mutation
 """
 
@@ -38,17 +38,14 @@ class ThreatERExternalListsInput(ThreatERModularInput):
     def collect(self):
         self.logger.info("Starting ThreatER external list collection")
 
-        checkpoint = ThreatERCheckpoint(
-            self,
-            key="external_lists_last_updated"
-        )
+        checkpoint = ThreatERCheckpoint(self, key="external_lists_last_updated")
         last_checkpoint = checkpoint.get()
 
         params = {"limit": 200}
         if last_checkpoint:
             params["updated_after"] = last_checkpoint
 
-        total_events = 0
+        total_records = 0
         newest_timestamp = last_checkpoint
         next_cursor = None
 
@@ -58,41 +55,42 @@ class ThreatERExternalListsInput(ThreatERModularInput):
 
             response = self.api.get(ENDPOINT, params=params)
 
-            lists = response.get("data", [])
-            meta = response.get("meta", {})
-            next_cursor = meta.get("next_cursor")
+            records = response.get("data") or []
+            meta = response.get("meta") or {}
+            next_cursor = meta.get("next_cursor") or meta.get("nextCursor")
 
-            for ext_list in lists:
+            for record in records:
                 self.write_event(
-                    data=json.dumps(ext_list),
+                    data=json.dumps(record),
                     sourcetype=SOURCETYPE
                 )
-                total_events += 1
+                total_records += 1
 
-                updated_at = ext_list.get("updated_at")
-                if updated_at and (
-                    not newest_timestamp
-                    or updated_at > newest_timestamp
-                ):
+                updated_at = (
+                    record.get("updated_at")
+                    or record.get("last_updated")
+                    or record.get("updatedAt")
+                    or record.get("timestamp")
+                )
+
+                if updated_at and (not newest_timestamp or updated_at > newest_timestamp):
                     newest_timestamp = updated_at
 
             self.logger.info(
-                f"Fetched {len(lists)} external lists "
-                f"(total so far: {total_events})"
+                f"Fetched {len(records)} external lists (total so far: {total_records})"
             )
 
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
-            self.logger.info(
-                f"Checkpoint updated to {newest_timestamp}"
-            )
+            self.logger.info(f"Checkpoint updated to {newest_timestamp}")
+        else:
+            self.logger.info("No checkpoint update required")
 
         self.logger.info(
-            f"ThreatER external list collection complete — "
-            f"{total_events} records ingested"
+            f"ThreatER external list collection complete — {total_records} records ingested"
         )
 
 
