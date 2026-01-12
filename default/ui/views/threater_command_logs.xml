@@ -1,0 +1,91 @@
+<!--
+  ThreatER for Splunk App
+  Command Logs
+-->
+
+<dashboard version="1.1">
+  <label>Command Logs</label>
+
+  <description>
+    Audit log of user and system actions performed within ThreatER.
+  </description>
+
+  <!-- ========================= -->
+  <!-- FILTERS -->
+  <!-- ========================= -->
+  <fieldset submitButton="false">
+
+    <input type="text" token="user_filter">
+      <label>User</label>
+    </input>
+
+    <input type="text" token="module_filter">
+      <label>Module</label>
+    </input>
+
+    <input type="text" token="action_filter">
+      <label>Action</label>
+    </input>
+
+    <input type="dropdown" token="ui_filter">
+      <label>UI Request</label>
+      <choice value="">All</choice>
+      <choice value="true">UI</choice>
+      <choice value="false">API</choice>
+    </input>
+
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- COMMAND LOG TABLE -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>ThreatER Command Logs</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:command_log
+| spath
+
+| eval
+    user_lc=lower(user),
+    module_lc=lower(module),
+    action_lc=lower(action),
+    is_ui_lc=lower(tostring(isUiRequest))
+
+| eval
+    user_filter_lc=lower(coalesce("$user_filter$", "")),
+    module_filter_lc=lower(coalesce("$module_filter$", "")),
+    action_filter_lc=lower(coalesce("$action_filter$", "")),
+    ui_filter_lc=lower(coalesce("$ui_filter$", ""))
+
+| search
+    user_lc="*" . user_filter_lc . "*"
+    module_lc="*" . module_filter_lc . "*"
+    action_lc="*" . action_filter_lc . "*"
+
+| where
+    (ui_filter_lc == "" OR is_ui_lc == ui_filter_lc)
+
+| table
+    datetime
+    user
+    module
+    action
+    message
+    isUiRequest
+
+| sort - datetime
+          </query>
+        </search>
+
+        <option name="count">25</option>
+        <option name="drilldown">none</option>
+      </table>
+
+    </panel>
+  </row>
+
+</dashboard>
