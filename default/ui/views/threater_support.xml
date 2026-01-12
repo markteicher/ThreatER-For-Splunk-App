@@ -49,6 +49,61 @@
   </row>
 
   <!-- ========================= -->
+  <!-- LIVE ERRORS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>
+        <icon>alert-triangle</icon>
+        Live Errors (Last 24 Hours)
+      </title>
+      <table>
+        <search>
+          <query>
+            index=_internal
+            (ThreatER OR threater)
+            (ERROR OR Exception OR Traceback)
+            | eval error_time=strftime(_time, "%Y-%m-%d %H:%M:%S")
+            | table error_time host source sourcetype _raw
+            | sort - error_time
+          </query>
+          <earliest>-24h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- API PERFORMANCE -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>
+        <icon>activity</icon>
+        ThreatER API Latency Trend
+      </title>
+      <chart>
+        <search>
+          <query>
+            index=security_threater
+            sourcetype=threater:ingestion:health
+            request_duration_ms=*
+            | timechart span=5m avg(request_duration_ms) AS "Avg API Latency (ms)"
+          </query>
+          <earliest>-24h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Milliseconds</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
   <!-- COMMON ISSUES -->
   <!-- ========================= -->
   <row>
@@ -84,9 +139,9 @@ index=security_threater
 | stats count by sourcetype
         </pre>
 
-        <p><strong>Check errors:</strong></p>
+        <p><strong>Check internal errors:</strong></p>
         <pre>
-index=_internal sourcetype=splunkd component=ModularInputs
+index=_internal (ThreatER OR threater) (ERROR OR Exception)
         </pre>
       </html>
     </panel>
