@@ -4,17 +4,6 @@
 """
 ThreatER for Splunk App
 Modular Input: Unexpected Blocks
-
-Source:
-- ThreatER API v3
-  https://portal.threater.com/api/v3/
-
-Purpose:
-- Collect unexpected block events from ThreatER
-- Capture block context, reason, mitigation signals
-- Preserve raw payloads for audit and investigation
-- Support pagination, proxy, SSL
-- Maintain checkpoint state for incremental ingestion
 """
 
 import sys
@@ -59,8 +48,7 @@ class ThreatERUnexpectedBlocksInput(ThreatERModularInput):
             response = self.api.get(ENDPOINT, params=params)
 
             records = response.get("data", [])
-            meta = response.get("meta", {})
-            next_cursor = meta.get("next_cursor")
+            next_cursor = response.get("meta", {}).get("next_cursor")
 
             for record in records:
                 self.write_event(
@@ -76,8 +64,7 @@ class ThreatERUnexpectedBlocksInput(ThreatERModularInput):
                 )
 
                 if updated_at and (
-                    not newest_timestamp
-                    or updated_at > newest_timestamp
+                    not newest_timestamp or updated_at > newest_timestamp
                 ):
                     newest_timestamp = updated_at
 
@@ -89,7 +76,7 @@ class ThreatERUnexpectedBlocksInput(ThreatERModularInput):
             if not next_cursor:
                 break
 
-        if newest_timestamp:
+        if newest_timestamp and newest_timestamp != last_checkpoint:
             checkpoint.set(newest_timestamp)
             self.logger.info(
                 f"Checkpoint updated to {newest_timestamp}"
