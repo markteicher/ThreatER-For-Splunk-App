@@ -1,0 +1,110 @@
+<form version="1.1">
+  <label>Appliances</label>
+
+  <fieldset submitButton="false">
+    <input type="text" token="name_filter">
+      <label>Name</label>
+    </input>
+
+    <input type="text" token="serial_filter">
+      <label>Serial Number</label>
+    </input>
+
+    <input type="text" token="registration_filter">
+      <label>Registration Code</label>
+    </input>
+
+    <input type="text" token="location_filter">
+      <label>Location</label>
+    </input>
+
+    <input type="dropdown" token="status_filter">
+      <label>Status</label>
+      <choice value="">All</choice>
+      <choice value="ACTIVE">ACTIVE</choice>
+      <choice value="INACTIVE">INACTIVE</choice>
+      <choice value="DEGRADED">DEGRADED</choice>
+    </input>
+
+    <input type="dropdown" token="network_filter">
+      <label>Network Status</label>
+      <choice value="">All</choice>
+      <choice value="UP">UP</choice>
+      <choice value="DOWN">DOWN</choice>
+    </input>
+
+    <input type="dropdown" token="uptodate_filter">
+      <label>Up To Date</label>
+      <choice value="">All</choice>
+      <choice value="true">true</choice>
+      <choice value="false">false</choice>
+    </input>
+  </fieldset>
+
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:appliance
+      | spath
+      | eval
+          name_lc=lower(name),
+          serial_lc=lower(serialNumber),
+          reg_lc=lower(registrationCode),
+          location_lc=lower(location),
+          status_uc=upper(status),
+          network_uc=upper(networkStatus),
+          uptodate=tostring(isUpToDate)
+      | search
+          name_lc="*$name_filter$*"
+          serial_lc="*$serial_filter$*"
+          reg_lc="*$registration_filter$*"
+          location_lc="*$location_filter$*"
+          status_uc="$status_filter$"
+          network_uc="$network_filter$"
+          uptodate="$uptodate_filter$"
+      | mvexpand subscriptions
+      | eval
+          subscription_type=subscriptions.type,
+          plan_name=subscriptions.plan.name,
+          plan_bandwidth=subscriptions.plan.bandwidth,
+          subscription_end=subscriptions.subscriptionEndsDatetime
+      | table
+          name
+          uuid
+          status
+          networkStatus
+          softwareVersion
+          software.family
+          software.version
+          software.buildNumber
+          updateStatus
+          isUpToDate
+          throughputPercent
+          hasDualBridging
+          adminIP
+          chassis
+          serialNumber
+          registrationCode
+          lastConnectedDatetime
+          supportEndsDatetime
+          hasSupport
+          subscription_type
+          plan_name
+          plan_bandwidth
+          subscription_end
+          company.name
+          company.msp.name
+    </query>
+  </search>
+
+  <row>
+    <panel>
+      <table>
+        <title>Appliances</title>
+        <option name="wrap">true</option>
+        <option name="count">25</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</form>
