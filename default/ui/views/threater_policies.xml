@@ -1,0 +1,114 @@
+<form version="1.1">
+  <label>Policies</label>
+
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:policy
+      | spath
+      | eval
+          name_lc=lower(name),
+          direction_lc=lower(direction),
+          enabled_lc=lower(tostring(enabled)),
+          action_lc=lower(action)
+    </query>
+  </search>
+
+  <fieldset submitButton="false">
+    <input type="text" token="name_filter">
+      <label>Policy Name</label>
+    </input>
+
+    <input type="dropdown" token="direction_filter">
+      <label>Direction</label>
+      <choice value="*">All</choice>
+      <choice value="inbound">Inbound</choice>
+      <choice value="outbound">Outbound</choice>
+      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="action_filter">
+      <label>Action</label>
+      <choice value="*">All</choice>
+      <choice value="allow">Allow</choice>
+      <choice value="block">Block</choice>
+      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="enabled_filter">
+      <label>Enabled</label>
+      <choice value="*">All</choice>
+      <choice value="true">Enabled</choice>
+      <choice value="false">Disabled</choice>
+      <default>*</default>
+    </input>
+  </fieldset>
+
+  <row>
+    <panel>
+      <table>
+        <title>Policies</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:policy
+            | spath
+            | eval
+                name_lc=lower(name),
+                direction_lc=lower(direction),
+                enabled_lc=lower(tostring(enabled)),
+                action_lc=lower(action)
+            | search
+                name_lc="*$name_filter$*"
+                direction_lc="$direction_filter$"
+                action_lc="$action_filter$"
+                enabled_lc="$enabled_filter$"
+            | table
+                name
+                action
+                direction
+                enabled
+                priority
+                networkCount
+                portCount
+                listCount
+                createdDatetime
+                updatedDatetime
+                uuid
+          </query>
+        </search>
+        <option name="count">25</option>
+        <option name="wrap">false</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <chart>
+        <title>Policies by Action</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:policy
+            | spath
+            | stats count by action
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <chart>
+        <title>Enabled vs Disabled Policies</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:policy
+            | spath
+            | stats count by enabled
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
+
+</form>
