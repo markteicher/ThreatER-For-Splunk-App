@@ -1,0 +1,6 @@
+section,capability,read_only,help_desk,admin,master
+USERS,View Users,X,X,X,X
+USERS,Create User,,,,X
+USERS,Edit Users,,,X,X
+USERS,Delete Users,,,,X
+COMMAND LOGS,View Command Logs,X,X,X,X
