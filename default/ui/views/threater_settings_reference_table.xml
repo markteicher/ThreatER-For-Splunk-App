@@ -1,0 +1,25 @@
+<dashboard version="1.1">
+  <label>Settings Reference</label>
+
+  <description>
+    Reference mapping between Portal configuration settings and their location
+    within the ThreatER Enforce UI.
+  </description>
+
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>
+| inputlookup settings_reference.csv
+| sort nav_tab portal_setting
+          </query>
+        </search>
+
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
