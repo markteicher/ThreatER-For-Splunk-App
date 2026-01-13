@@ -1,113 +1,136 @@
-<form version="1.1">
+<!-- default/data/ui/views/threater_plugins.xml -->
+<dashboard version="1.1">
   <label>Plugins</label>
 
-  <search>
-    <query>
-      index=security_threater sourcetype=threater:plugin
-      | spath
-      | eval
-          name_lc=lower(name),
-          type_lc=lower(type),
-          enabled_lc=lower(tostring(enabled)),
-          healthy_lc=lower(tostring(isHealthy))
-    </query>
-  </search>
+  <description>
+    Plugin-backed list sources (Allow/Block/Threat) and their operational status.
+  </description>
 
   <fieldset submitButton="false">
     <input type="text" token="name_filter">
-      <label>Plugin Name</label>
+      <label>Name</label>
     </input>
 
     <input type="dropdown" token="type_filter">
-      <label>Plugin Type</label>
-      <choice value="*">All</choice>
+      <label>List Type</label>
+      <choice value="">All</choice>
+      <choice value="allow">Allow</choice>
+      <choice value="block">Block</choice>
+      <choice value="threat">Threat</choice>
+    </input>
+
+    <input type="dropdown" token="indicator_filter">
+      <label>Indicator Type</label>
+      <choice value="">All</choice>
       <choice value="ip">IP</choice>
       <choice value="domain">Domain</choice>
-      <choice value="csv">CSV</choice>
-      <choice value="stix">STIX/TAXII</choice>
-      <default>*</default>
     </input>
 
     <input type="dropdown" token="enabled_filter">
       <label>Enabled</label>
-      <choice value="*">All</choice>
+      <choice value="">All</choice>
       <choice value="true">Enabled</choice>
       <choice value="false">Disabled</choice>
-      <default>*</default>
     </input>
 
     <input type="dropdown" token="healthy_filter">
-      <label>Health</label>
-      <choice value="*">All</choice>
+      <label>Healthy</label>
+      <choice value="">All</choice>
       <choice value="true">Healthy</choice>
       <choice value="false">Unhealthy</choice>
-      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="public_filter">
+      <label>Public</label>
+      <choice value="">All</choice>
+      <choice value="true">Public</choice>
+      <choice value="false">Private</choice>
     </input>
   </fieldset>
 
   <row>
     <panel>
+      <title>Plugin Summary</title>
       <table>
-        <title>Configured Plugins</title>
         <search>
           <query>
-            index=security_threater sourcetype=threater:plugin
-            | spath
-            | eval
-                name_lc=lower(name),
-                type_lc=lower(type),
-                enabled_lc=lower(tostring(enabled)),
-                healthy_lc=lower(tostring(isHealthy))
-            | search
-                name_lc="*$name_filter$*"
-                type_lc="$type_filter$"
-                enabled_lc="$enabled_filter$"
-                healthy_lc="$healthy_filter$"
-            | table
-                name
-                type
-                enabled
-                isHealthy
-                interval
-                lastSyncDatetime
-                lastUpdateDatetime
-                pluginUuid
+index=security_threater sourcetype=threater:plugin
+| spath
+
+| eval
+    name=coalesce(name, pluginName, title),
+    uuid=coalesce(uuid, id),
+    type=lower(coalesce(type, listType, pluginType)),
+    indicator_type=lower(coalesce(indicator_type, indicatorType, indicator, feedType)),
+    enabled=coalesce(enabled, isEnabled),
+    isPublic=coalesce(isPublic, public),
+    isHealthy=coalesce(isHealthy, healthy),
+    count=coalesce(count, entryCount, entries, total),
+    interval=coalesce(interval, syncInterval),
+    lastUpdateDatetime=coalesce(lastUpdateDatetime, lastUpdate, updated_at, updatedAt),
+    lastSyncDatetime=coalesce(lastSyncDatetime, lastSync, lastSyncedDatetime, lastSyncedAt)
+
+| eval
+    name_lc=lower(tostring(name)),
+    type_lc=lower(tostring(type)),
+    indicator_lc=lower(tostring(indicator_type)),
+    enabled_lc=lower(tostring(enabled)),
+    healthy_lc=lower(tostring(isHealthy)),
+    public_lc=lower(tostring(isPublic))
+
+| eval
+    name_filter_lc=lower(coalesce("$name_filter$", "")),
+    type_filter_lc=lower(coalesce("$type_filter$", "")),
+    indicator_filter_lc=lower(coalesce("$indicator_filter$", "")),
+    enabled_filter_lc=lower(coalesce("$enabled_filter$", "")),
+    healthy_filter_lc=lower(coalesce("$healthy_filter$", "")),
+    public_filter_lc=lower(coalesce("$public_filter$", ""))
+
+| where
+    (name_filter_lc="" OR like(name_lc, "%" . name_filter_lc . "%"))
+    AND (type_filter_lc="" OR type_lc=type_filter_lc)
+    AND (indicator_filter_lc="" OR indicator_lc=indicator_filter_lc)
+    AND (enabled_filter_lc="" OR enabled_lc=enabled_filter_lc)
+    AND (healthy_filter_lc="" OR healthy_lc=healthy_filter_lc)
+    AND (public_filter_lc="" OR public_lc=public_filter_lc)
+
+| eval
+    enabled=if(enabled="true" OR enabled=1 OR enabled="1", "true", if(enabled="false" OR enabled=0 OR enabled="0", "false", tostring(enabled))),
+    isHealthy=if(isHealthy="true" OR isHealthy=1 OR isHealthy="1", "true", if(isHealthy="false" OR isHealthy=0 OR isHealthy="0", "false", tostring(isHealthy))),
+    isPublic=if(isPublic="true" OR isPublic=1 OR isPublic="1", "true", if(isPublic="false" OR isPublic=0 OR isPublic="0", "false", tostring(isPublic)))
+
+| eval
+    last_update_epoch=coalesce(strptime(lastUpdateDatetime, "%Y-%m-%dT%H:%M:%S.%3N%:z"), strptime(lastUpdateDatetime, "%Y-%m-%dT%H:%M:%S%:z"), strptime(lastUpdateDatetime, "%Y-%m-%dT%H:%M:%S")),
+    last_sync_epoch=coalesce(strptime(lastSyncDatetime, "%Y-%m-%dT%H:%M:%S.%3N%:z"), strptime(lastSyncDatetime, "%Y-%m-%dT%H:%M:%S%:z"), strptime(lastSyncDatetime, "%Y-%m-%dT%H:%M:%S"))
+
+| eval
+    lastUpdate=if(isnotnull(last_update_epoch), strftime(last_update_epoch, "%Y-%m-%d %H:%M:%S %z"), lastUpdateDatetime),
+    lastSync=if(isnotnull(last_sync_epoch), strftime(last_sync_epoch, "%Y-%m-%d %H:%M:%S %z"), lastSyncDatetime)
+
+| table
+    name
+    uuid
+    type
+    indicator_type
+    enabled
+    isHealthy
+    isPublic
+    count
+    interval
+    lastUpdate
+    lastSync
+
+| sort 0 name
           </query>
+          <earliest>-30d</earliest>
+          <latest>now</latest>
         </search>
-        <option name="count">25</option>
-        <option name="wrap">false</option>
+
+        <option name="count">50</option>
+        <option name="drilldown">none</option>
+        <option name="wrap">true</option>
       </table>
     </panel>
   </row>
 
-  <row>
-    <panel>
-      <chart>
-        <title>Plugins by Type</title>
-        <search>
-          <query>
-            index=security_threater sourcetype=threater:plugin
-            | spath
-            | stats count by type
-          </query>
-        </search>
-        <option name="charting.chart">pie</option>
-      </chart>
-    </panel>
-
-    <panel>
-      <chart>
-        <title>Plugin Health</title>
-        <search>
-          <query>
-            index=security_threater sourcetype=threater:plugin
-            | spath
-            | stats count by isHealthy
-          </query>
-        </search>
-        <option name="charting.chart">pie</option>
-      </chart>
-    </panel>
-  </row>
-
-</form>
+</dashboard>
