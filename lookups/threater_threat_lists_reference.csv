@@ -1,0 +1,3 @@
+list_name,provider,description,subscription_required,notes
+Proofpoint,Proofpoint,"World-class threat intelligence feed with ~20,000–50,000 vetted IOCs across many threat categories, including confidence factors",true,"Available via Marketplace subscription"
+Webroot,Webroot,"BrightCloud URL Classification and Reputation Service providing millions of vetted IOCs across many threat categories with confidence factors",false,"Included for all customers"
