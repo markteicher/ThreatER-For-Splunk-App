@@ -1,74 +1,47 @@
 <dashboard version="1.1">
   <label>Roles &amp; Permissions</label>
 
-  <!-- ========================= -->
-  <!-- DOWNLOAD -->
-  <!-- ========================= -->
   <row>
     <panel>
-      <html>
-        <a class="btn btn-primary"
-           href="/en-US/splunkd/__raw/services/search/jobs/export?
-search=%7Cmakeresults%7Ceval+Category%3D%22COLLECT%22+...&output_mode=csv"
-           target="_blank">
-          Download Permissions (CSV)
-        </a>
-      </html>
-    </panel>
-  </row>
-
-  <!-- ========================= -->
-  <!-- PERMISSIONS TABLE -->
-  <!-- ========================= -->
-  <row>
-    <panel>
+      <title>Collect</title>
       <table>
         <search>
           <query>
-| makeresults
-| eval raw=split("
-COLLECT|View Lists|1|1|1|1;
-COLLECT|Create Lists|0|0|1|1;
-COLLECT|Edit Lists|0|0|1|1;
-COLLECT|Delete Lists|0|0|1|1;
-ENFORCE|View Enforcers|1|1|1|1;
-ENFORCE|Edit Enforcer|0|0|1|1;
-NETWORKS|View Networks|1|1|1|1;
-NETWORKS|Create Networks|0|0|1|1;
-NETWORKS|Delete Networks|0|0|1|1;
-POLICIES|View Policies|1|1|1|1;
-POLICIES|Create Policies|0|0|1|1;
-REPORTS|View Reports|1|1|1|1;
-REPORTS|Schedule Reports|0|0|1|1;
-ADMIN|View Users|1|1|1|1;
-ADMIN|Create User|0|0|0|1;
-ADMIN|Delete User|0|0|0|1;
-IOC SEARCH|Search Indicators|1|1|1|1
-",";")
-| mvexpand raw
-| eval f=split(raw,"|")
-| eval
-    Category=mvindex(f,0),
-    Permission=mvindex(f,1),
-    ReadOnly=mvindex(f,2),
-    HelpDesk=mvindex(f,3),
-    Admin=mvindex(f,4),
-    Master=mvindex(f,5)
-
-| foreach ReadOnly HelpDesk Admin Master
-    [ eval <<FIELD>>=if(<<FIELD>>="1",
-        "<i class='icon-check-circle' style='color:green'></i>",
-        "<i class='icon-close' style='color:red'></i>") ]
-
-| table Category Permission ReadOnly HelpDesk Admin Master
-| sort Category Permission
+| inputlookup roles_permissions_collect.csv
+| fields - section
           </query>
         </search>
-
-        <option name="wrap">true</option>
-        <option name="count">50</option>
         <option name="drilldown">none</option>
-        <option name="html">true</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Enforce</title>
+      <table>
+        <search>
+          <query>
+| inputlookup roles_permissions_enforce.csv
+| fields - section
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Administration</title>
+      <table>
+        <search>
+          <query>
+| inputlookup roles_permissions_admin.csv
+| fields - section
+          </query>
+        </search>
+        <option name="drilldown">none</option>
       </table>
     </panel>
   </row>
