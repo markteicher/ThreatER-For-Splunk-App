@@ -1,0 +1,12 @@
+module,description
+Auth,User logs in and logs out of the portal
+Report Schedule,User has made changes to scheduled reports
+Policy,Changes made to policies
+Allow IP,Adjustments to allow IP entry
+Block IP,Adjustments to block IP entry
+Sources,Changes to lists
+Appliance,Adjustments to edge instances
+Network,Changes to networks or ports
+Subscriptions,Changes to subscriptions
+Adjustments,Changes to ASN
+User,Changes in user management
