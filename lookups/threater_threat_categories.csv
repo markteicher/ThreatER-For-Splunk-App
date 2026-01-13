@@ -1,20 +1,20 @@
 category,description,examples
-Command and Control,Command and Control servers,CnC servers for botnets such as Conficker, Kelihos
-Botnets,Known infected bots,Hosts belonging to botnets such as Conficker, Kelihos
-Spam,Known spam sources,Servers sending spam or tunneling spam through proxies
-Scanners,Hosts performing scanning or brute force attempts,Reconnaissance probes, host scans, password brute force
-Endpoint Exploits,Hosts distributing malware capable of exploiting endpoints,Shellcode, rootkits, worms, viruses
-Web Exploits,Hosts attempting to exploit web vulnerabilities,Cross-site scripting, SQL injection, iframe injection
-Drop Sites,Drop sites for logs or stolen credentials,Credential exfiltration endpoints
-Proxy/VPN,Hosts providing proxy or VPN services,Public anonymous proxy or VPN services
-DDOS,Hosts participating in DDoS attacks,Distributed denial-of-service sources
-Compromised,Known compromised or hostile hosts,WebShell hosts not tied to a botnet
-Fraudulent Activity,Hosts participating in fraudulent activity,Phishing, ad click fraud, gaming fraud
-Illegal Activity,Hosts participating in illegal activity,Stolen credential markets, credit card trading
-Undesirable Activity,Hosts participating in undesirable but legal activity,Hacking tools or malicious content hosting
-P2P Node,Hosts participating in peer-to-peer networks,P2P infrastructure nodes
-Online Gaming,Questionable online gaming sites,Online gaming-related hosts
-Remote Access Servers,Servers providing remote access capabilities,GoToMyPC, LogMeIn-like services
-TOR/Anonymizers,Hosts participating in TOR or anonymizing networks,TOR exit nodes
-Brute Force Password,IP addresses associated with password brute force activity,Credential brute force sources
-Advanced Persistent Threats,IP addresses associated with known APT actors,C2 or exfiltration infrastructure for APT groups
+Command and Control,Command and Control servers,"CnC servers for botnets such as Conficker, Kelihos"
+Botnets,Known infected bots,"Hosts belonging to botnets such as Conficker, Kelihos"
+Spam,Known spam sources,"Servers sending spam, tunneling spam through proxies"
+Scanners,Hosts performing scanning or brute force attempts,"Probes, host scans, password brute force"
+Endpoint Exploits,Hosts distributing malware capable of exploiting endpoints,"Shellcode, rootkits, worms, viruses"
+Web Exploits,Hosts attempting to exploit web vulnerabilities,"Cross-site scripting, SQL injection, iframe injection"
+Drop Sites,Drop sites for logs or stolen credentials,
+Proxy/VPN,Hosts providing proxy or VPN services,"Public anonymous proxy or VPN services"
+DDOS,Hosts participating in DDOS attacks,
+Compromised,Known compromised or hostile hosts,"WebShell hosts not tied to a botnet"
+Fraudulent Activity,Hosts participating in fraudulent activity,"Phishing sites, ad click fraud, gaming fraud"
+Illegal Activity,Hosts participating in illegal activity,"Credential markets, credit card trading"
+Undesirable Activity,Hosts participating in undesirable but legal activity,"Hacking tools or malicious content hosting"
+P2P Node,Hosts participating in a peer-to-peer network,
+Online Gaming,Questionable online gaming sites,
+Remote Access Servers,Servers providing remote access capabilities,"GoToMyPC, LogMeIn-like services"
+TOR/Anonymizers,Hosts participating in TOR or anonymizing networks,"TOR exit nodes"
+Brute Force Password,IP addresses associated with password brute force activity,
+Advanced Persistent Threats,IP addresses associated with known APT actors,"C2 or exfiltration infrastructure"
