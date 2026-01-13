@@ -1,0 +1,34 @@
+<dashboard version="1.1">
+  <label>Command Logs Reference</label>
+
+  <row>
+    <panel>
+      <title>Module Descriptions</title>
+      <table>
+        <search>
+          <query>
+| inputlookup module_descriptions.csv
+| rename module AS "Module Value", description AS "Description"
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Action Descriptions</title>
+      <table>
+        <search>
+          <query>
+| inputlookup action_descriptions.csv
+| rename action AS "Action Value", description AS "Description"
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
