@@ -1,0 +1,22 @@
+<dashboard version="1.1">
+  <label>Block Lists – IP Indicators</label>
+
+  <description>
+    Reference documentation for built-in IP block lists available in ThreatER.
+  </description>
+
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>
+| inputlookup threater_block_lists_ip_indicators.csv
+          </query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
