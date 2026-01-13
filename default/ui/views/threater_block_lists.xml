@@ -1,0 +1,113 @@
+<form version="1.1">
+  <label>Block Lists</label>
+
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:block_list
+      | spath
+      | eval
+          name_lc=lower(name),
+          type_lc=lower(type),
+          enabled_lc=lower(tostring(enabled)),
+          healthy_lc=lower(tostring(isHealthy))
+    </query>
+  </search>
+
+  <!-- ========================= -->
+  <!-- FILTERS -->
+  <!-- ========================= -->
+  <fieldset submitButton="false">
+    <input type="text" token="name_filter">
+      <label>List Name</label>
+    </input>
+
+    <input type="dropdown" token="enabled_filter">
+      <label>Enabled</label>
+      <choice value="*">All</choice>
+      <choice value="true">Enabled</choice>
+      <choice value="false">Disabled</choice>
+      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="healthy_filter">
+      <label>Health</label>
+      <choice value="*">All</choice>
+      <choice value="true">Healthy</choice>
+      <choice value="false">Unhealthy</choice>
+      <default>*</default>
+    </input>
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- BLOCK LISTS TABLE -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Block Lists</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:block_list
+            | spath
+            | eval
+                name_lc=lower(name),
+                enabled_lc=lower(tostring(enabled)),
+                healthy_lc=lower(tostring(isHealthy))
+            | search
+                name_lc="*$name_filter$*"
+                enabled_lc="$enabled_filter$"
+                healthy_lc="$healthy_filter$"
+            | table
+                name
+                description
+                type
+                enabled
+                count
+                interval
+                lastUpdateDatetime
+                lastSyncDatetime
+                isHealthy
+                isPublic
+                pluginUuid
+          </query>
+        </search>
+        <option name="count">20</option>
+        <option name="wrap">false</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- HEALTH & ENABLEMENT SUMMARY -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <chart>
+        <title>Block Lists by Health</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:block_list
+            | spath
+            | stats count by isHealthy
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <chart>
+        <title>Block Lists by Status</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:block_list
+            | spath
+            | stats count by enabled
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
+
+</form>
