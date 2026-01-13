@@ -1,0 +1,6 @@
+action,description
+Create,Add new entries
+Update,Edit existing entries
+Delete,Deactivate or remove existing entries
+Login,User signs into portal
+Logout,User signs out of portal
