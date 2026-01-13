@@ -1,0 +1,12 @@
+section,capability,read_only,help_desk,admin,master
+ENFORCERS,View Enforcers,X,X,X,X
+ENFORCERS,Edit Enforcer Name/Location,,,X,X
+ENFORCERS,Manage Subscriptions,,,X,X
+NETWORKS,View Networks,X,X,X,X
+NETWORKS,Create Networks,,,X,X
+NETWORKS,Edit Networks,,,X,X
+NETWORKS,Delete Networks,,,X,X
+PORTS,View Ports,X,X,X,X
+PORTS,Create Ports,,,X,X
+PORTS,Edit Ports,,,X,X
+PORTS,Delete Ports,,,X,X
