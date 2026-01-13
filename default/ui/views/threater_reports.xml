@@ -1,0 +1,101 @@
+<form version="1.1">
+  <label>Reports</label>
+
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:report
+      | spath
+      | eval
+          name_lc=lower(name),
+          type_lc=lower(type),
+          enabled_lc=lower(tostring(enabled))
+    </query>
+  </search>
+
+  <fieldset submitButton="false">
+    <input type="text" token="name_filter">
+      <label>Report Name</label>
+    </input>
+
+    <input type="dropdown" token="type_filter">
+      <label>Report Type</label>
+      <choice value="*">All</choice>
+      <choice value="scheduled">Scheduled</choice>
+      <choice value="manual">Manual</choice>
+      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="enabled_filter">
+      <label>Status</label>
+      <choice value="*">All</choice>
+      <choice value="true">Enabled</choice>
+      <choice value="false">Disabled</choice>
+      <default>*</default>
+    </input>
+  </fieldset>
+
+  <row>
+    <panel>
+      <table>
+        <title>Reports</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:report
+            | spath
+            | eval
+                name_lc=lower(name),
+                type_lc=lower(type),
+                enabled_lc=lower(tostring(enabled))
+            | search
+                name_lc="*$name_filter$*"
+                type_lc="$type_filter$"
+                enabled_lc="$enabled_filter$"
+            | table
+                name
+                type
+                enabled
+                schedule
+                lastRunDatetime
+                nextRunDatetime
+                createdDatetime
+                updatedDatetime
+                uuid
+          </query>
+        </search>
+        <option name="count">25</option>
+        <option name="wrap">false</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <chart>
+        <title>Reports by Type</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:report
+            | spath
+            | stats count by type
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <chart>
+        <title>Enabled vs Disabled Reports</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:report
+            | spath
+            | stats count by enabled
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
+
+</form>
