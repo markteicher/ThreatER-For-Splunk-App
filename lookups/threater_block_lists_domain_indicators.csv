@@ -1,0 +1,3 @@
+list_name,description,source,availability,notes
+CISA Alert List,"Malicious domain indicators from CISA advisories. ThreatER personnel validate advisories and automatically add viable indicators.",CISA,Included,"Source: https://us-cert.cisa.gov/ncas/alerts"
+DomainTools,"Block list containing millions of malicious domain and DNS indicators of compromise (IOCs).",DomainTools,Marketplace,"Requires Marketplace enablement. Source: https://www.domaintools.com/solutions/threat-intelligence"
