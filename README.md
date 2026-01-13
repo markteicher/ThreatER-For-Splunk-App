@@ -83,8 +83,7 @@ https://portal.threater.com/api/v3/
 - Organizations
 - Users
 - Roles & Permissions
-- API Keys
-- Platform Health
+- Health
 
 All data is ingested as **raw JSON** to preserve evidence fidelity.
 
@@ -153,19 +152,13 @@ The ThreatER for Splunk App mirrors the ThreatER portal navigation and is organi
   - Block Lists
   - Threat Lists
 - **List Creation**
-  - Create IP Threat Lists
-  - Create Manual IP Allow & Block Lists
-  - Create Manual Domain Lists
+  - Threat Lists
+
 - **List Details**
   - List Details
-  - Add Entries
-  - Apply to Policies
-  - Create Policy During List Creation
-  - Add & Remove List Entries
+
 - **Plugins**
   - List Details
-  - Set Up External List
-  - Apply to Policies
 
 ---
 
@@ -179,33 +172,22 @@ The ThreatER for Splunk App mirrors the ThreatER portal navigation and is organi
   - Enforcement Scope
   - Enforcement State
 - **Networks**
-  - Create Networks
+  - List Networks
   - Network Details
   - Inbound / Outbound
-  - Create Policy During Network Creation
-  - IPs
-  - Edit Network
-  - Delete Network
-  - Duplicate Network
+
+    
 - **Ports**
-  - Add Ports
-  - Edit Ports
-  - Delete Ports
+  - List Ports
+
 
 ---
 
 ### 🏢 Administration
 - **Users**
   - Users
-  - Create New User
-  - Edit User Accounts
-  - Disable an Account
-  - Enable an Account
-  - Update User Email
-  - Update User Role
-  - Update User Password
-  - Delete Users
   - Users Filter
+    
 - **Subscriptions**
 - **Command Logs**
 
@@ -283,9 +265,6 @@ https://portal.threater.com/api/v3/
 ### Lists
 - GET /lists
 - GET /lists/{list_id}
-- POST /lists
-- PUT /lists/{list_id}
-- DELETE /lists/{list_id}
 
 ### List Types
 - GET /list-types
@@ -301,22 +280,17 @@ https://portal.threater.com/api/v3/
 
 ### List Entries
 - GET /lists/{list_id}/entries
-- POST /lists/{list_id}/entries
-- DELETE /lists/{list_id}/entries/{entry_id}
+
 
 ### List → Policy Association
 - POST /lists/{list_id}/policies
-- DELETE /lists/{list_id}/policies/{policy_id}
+
 
 ---
 
 ## Collect → Plugins (External Lists)
 - GET /plugins
 - GET /plugins/{plugin_id}
-- POST /plugins
-- PUT /plugins/{plugin_id}
-- DELETE /plugins/{plugin_id}
-- POST /plugins/{plugin_id}/sync
 
 ---
 
@@ -331,24 +305,19 @@ https://portal.threater.com/api/v3/
 ### Enforcement Policies
 - GET /policies
 - GET /policies/{policy_id}
-- POST /policies
-- PUT /policies/{policy_id}
-- DELETE /policies/{policy_id}
+
 
 ---
 
 ## Enforce → Networks
 - GET /networks
 - GET /networks/{network_id}
-- POST /networks
-- PUT /networks/{network_id}
-- DELETE /networks/{network_id}
 - POST /networks/{network_id}/duplicate
 
 ### Network IP Management
 - GET /networks/{network_id}/ips
 - POST /networks/{network_id}/ips
-- DELETE /networks/{network_id}/ips/{ip_id}
+
 
 ---
 
@@ -412,9 +381,6 @@ https://portal.threater.com/api/v3/
 
 ### Scheduled Reports
 - GET /reports/scheduled
-- POST /reports/scheduled
-- PUT /reports/scheduled/{report_id}
-- DELETE /reports/scheduled/{report_id}
 
 ---
 
@@ -422,9 +388,6 @@ https://portal.threater.com/api/v3/
 - GET /events/blocks
 - GET /events/unexpected-blocks
 - GET /mitigations
-- PUT /thresholds
-- POST /allow-list/enable
-- POST /allow-list/manual
 
 ---
 
@@ -432,18 +395,15 @@ https://portal.threater.com/api/v3/
 
 ### System
 - GET /settings/syslog
-- PUT /settings/syslog
 - GET /settings/access-control
 - GET /settings/bridges
 - GET /settings/ntp
 
 ### Device Configuration
 - GET /device/interfaces
-- PUT /device/interfaces
 - GET /device/dhcp
-- PUT /device/dhcp
 - GET /device/wifi
-- PUT /device/wifi
+
 
 ### Enforce Software
 - POST /software/update
