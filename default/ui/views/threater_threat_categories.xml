@@ -1,0 +1,22 @@
+<dashboard version="1.1">
+  <label>Threat Categories</label>
+
+  <description>
+    Reference documentation for ThreatER threat intelligence categories.
+  </description>
+
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>
+| inputlookup threater_threat_categories.csv
+          </query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
