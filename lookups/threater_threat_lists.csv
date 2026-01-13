@@ -1,0 +1,3 @@
+category,provider,description
+Threat Lists,Proofpoint,"Well-vetted IOCs (20k–50k) with confidence scoring. Marketplace subscription required."
+Threat Lists,Webroot,"BrightCloud reputation feed with millions of IOCs. Included for all customers."
