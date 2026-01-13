@@ -1,108 +1,90 @@
 <dashboard version="1.1">
-  <label>Allow Lists – Domain</label>
+  <label>Allow Lists – Domains</label>
 
   <description>
-    Domain-based allow lists retrieved from ThreatER.
+    Domain allow list sources configured in ThreatER.
   </description>
 
   <!-- ========================= -->
-  <!-- INSIGHT PANELS -->
+  <!-- OVERVIEW PANELS -->
   <!-- ========================= -->
-
   <row>
-
-    <!-- Enabled vs Disabled -->
     <panel>
-      <title>Enabled vs Disabled</title>
-      <chart>
+      <single>
+        <title>Enabled Lists</title>
         <search>
           <query>
 index=security_threater sourcetype=threater:allow_list_domain
-| stats count by enabled
+| stats count(eval(enabled=true)) AS enabled
           </query>
         </search>
-        <option name="charting.chart">pie</option>
-        <option name="charting.legend.placement">right</option>
-      </chart>
+      </single>
     </panel>
 
-    <!-- Public vs Private -->
     <panel>
-      <title>Public vs Private</title>
-      <chart>
+      <single>
+        <title>Disabled Lists</title>
         <search>
           <query>
 index=security_threater sourcetype=threater:allow_list_domain
-| stats count by isPublic
+| stats count(eval(enabled=false)) AS disabled
           </query>
         </search>
-        <option name="charting.chart">pie</option>
-        <option name="charting.legend.placement">right</option>
-      </chart>
+      </single>
     </panel>
 
-    <!-- Healthy vs Unhealthy -->
     <panel>
-      <title>Health Status</title>
-      <chart>
+      <single>
+        <title>Unhealthy Lists</title>
         <search>
           <query>
 index=security_threater sourcetype=threater:allow_list_domain
-| stats count by isHealthy
+| stats count(eval(isHealthy=false)) AS unhealthy
           </query>
         </search>
-        <option name="charting.chart">pie</option>
-        <option name="charting.legend.placement">right</option>
-      </chart>
+      </single>
     </panel>
-
   </row>
 
   <!-- ========================= -->
-  <!-- STALENESS PANELS -->
+  <!-- SYNC / UPDATE AGE -->
   <!-- ========================= -->
-
   <row>
-
-    <!-- Last Update Age -->
     <panel>
-      <title>Last Update Age (Hours)</title>
-      <table>
+      <chart>
+        <title>Last Sync Age (Hours)</title>
         <search>
           <query>
 index=security_threater sourcetype=threater:allow_list_domain
-| eval lastUpdateEpoch=strptime(lastUpdateDatetime, "%Y-%m-%dT%H:%M:%S.%3N%z")
-| eval age_hours=round((now()-lastUpdateEpoch)/3600,2)
-| stats max(age_hours) as max_hours min(age_hours) as min_hours avg(age_hours) as avg_hours
+| eval sync_age_hours=(now()-strptime(lastSyncDatetime,"%Y-%m-%dT%H:%M:%S"))/3600
+| stats avg(sync_age_hours) AS "Average Sync Age (Hours)"
           </query>
         </search>
-      </table>
+        <option name="charting.chart">column</option>
+      </chart>
     </panel>
 
-    <!-- Last Sync Age -->
     <panel>
-      <title>Last Sync Age (Hours)</title>
-      <table>
+      <chart>
+        <title>Last Update Age (Hours)</title>
         <search>
           <query>
 index=security_threater sourcetype=threater:allow_list_domain
-| eval lastSyncEpoch=strptime(lastSyncDatetime, "%Y-%m-%dT%H:%M:%S.%3N%z")
-| eval age_hours=round((now()-lastSyncEpoch)/3600,2)
-| stats max(age_hours) as max_hours min(age_hours) as min_hours avg(age_hours) as avg_hours
+| eval update_age_hours=(now()-strptime(lastUpdateDatetime,"%Y-%m-%dT%H:%M:%S"))/3600
+| stats avg(update_age_hours) AS "Average Update Age (Hours)"
           </query>
         </search>
-      </table>
+        <option name="charting.chart">column</option>
+      </chart>
     </panel>
-
   </row>
 
   <!-- ========================= -->
-  <!-- FULL INVENTORY -->
+  <!-- ALLOW LIST TABLE -->
   <!-- ========================= -->
-
   <row>
     <panel>
-      <title>Allow Lists – Domain (Inventory)</title>
+      <title>Domain Allow Lists</title>
       <table>
         <search>
           <query>
@@ -112,19 +94,24 @@ index=security_threater sourcetype=threater:allow_list_domain
     name
     enabled
     count
-    description
     type
     interval
     lastUpdateDatetime
     lastSyncDatetime
-    pluginUuid
     isPublic
     isHealthy
 | sort name
           </query>
         </search>
+
         <option name="count">25</option>
-        <option name="drilldown">none</option>
+        <option name="drilldown">row</option>
+
+        <drilldown>
+          <link>
+            /app/threater/threater_allow_list_domain_entries?form.list_uuid=$row.uuid$
+          </link>
+        </drilldown>
       </table>
     </panel>
   </row>
