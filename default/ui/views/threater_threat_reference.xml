@@ -1,0 +1,29 @@
+<dashboard version="1.1">
+  <label>Threat Lists Reference</label>
+
+  <description>
+    Reference list of ThreatER threat intelligence list sources and descriptions.
+  </description>
+
+  <row>
+    <panel>
+      <title>Threat Lists</title>
+      <table>
+        <search>
+          <query>
+| inputlookup threater_threat_lists_reference.csv
+| eval list_name=coalesce(list_name, "")
+| eval provider=coalesce(provider, "")
+| eval description=coalesce(description, "")
+| eval subscription_required=coalesce(subscription_required, "")
+| eval notes=coalesce(notes, "")
+| table list_name provider subscription_required description notes
+          </query>
+        </search>
+        <option name="count">25</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
