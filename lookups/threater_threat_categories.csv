@@ -1,19 +1,20 @@
 category,description,examples
-Command and Control,Command and control servers,Botnet C2 servers (Conficker, Kelihos)
-Botnets,Known infected bots,Infected hosts in active botnets
-Spam,Known spam sources,SMTP abuse and spam proxies
-Scanners,Reconnaissance and brute force activity,Port scans and password brute force
-Endpoint Exploits,Malware exploiting endpoints,Shellcode, rootkits, worms
-Web Exploits,Web application exploitation,XSS, SQL injection, iFrame injection
-Drop Sites,Credential and data drop locations,Log and credential exfiltration sites
-Proxy/VPN,Proxy or VPN services,TOR, anonymous proxies
-DDOS,Distributed denial-of-service participants,Hosts in active DDOS attacks
-Compromised,Known compromised hosts,WebShells and hostile servers
-Fraudulent Activity,Fraud and phishing activity,Ad fraud, phishing
-Illegal Activity,Illegal online activity,Stolen credentials and marketplaces
-Undesirable Activity,Questionable but not illegal activity,Hacking tool hosting
-P2P Node,Peer-to-peer participation,Torrent nodes
-Remote Access Servers,Remote access services,GoToMyPC, LogMeIn
-TOR/Anonymizers,TOR and anonymization nodes,TOR exit nodes
-Brute Force Password,Password brute force activity,Credential stuffing IPs
-Advanced Persistent Threats,APT infrastructure,Known nation-state actors
+Command and Control,Command and Control servers,CnC servers for botnets such as Conficker, Kelihos
+Botnets,Known infected bots,Hosts belonging to botnets such as Conficker, Kelihos
+Spam,Known spam sources,Servers sending spam or tunneling spam through proxies
+Scanners,Hosts performing scanning or brute force attempts,Reconnaissance probes, host scans, password brute force
+Endpoint Exploits,Hosts distributing malware capable of exploiting endpoints,Shellcode, rootkits, worms, viruses
+Web Exploits,Hosts attempting to exploit web vulnerabilities,Cross-site scripting, SQL injection, iframe injection
+Drop Sites,Drop sites for logs or stolen credentials,Credential exfiltration endpoints
+Proxy/VPN,Hosts providing proxy or VPN services,Public anonymous proxy or VPN services
+DDOS,Hosts participating in DDoS attacks,Distributed denial-of-service sources
+Compromised,Known compromised or hostile hosts,WebShell hosts not tied to a botnet
+Fraudulent Activity,Hosts participating in fraudulent activity,Phishing, ad click fraud, gaming fraud
+Illegal Activity,Hosts participating in illegal activity,Stolen credential markets, credit card trading
+Undesirable Activity,Hosts participating in undesirable but legal activity,Hacking tools or malicious content hosting
+P2P Node,Hosts participating in peer-to-peer networks,P2P infrastructure nodes
+Online Gaming,Questionable online gaming sites,Online gaming-related hosts
+Remote Access Servers,Servers providing remote access capabilities,GoToMyPC, LogMeIn-like services
+TOR/Anonymizers,Hosts participating in TOR or anonymizing networks,TOR exit nodes
+Brute Force Password,IP addresses associated with password brute force activity,Credential brute force sources
+Advanced Persistent Threats,IP addresses associated with known APT actors,C2 or exfiltration infrastructure for APT groups
