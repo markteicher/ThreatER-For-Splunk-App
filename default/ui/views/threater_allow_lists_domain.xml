@@ -1,0 +1,132 @@
+<dashboard version="1.1">
+  <label>Allow Lists – Domain</label>
+
+  <description>
+    Domain-based allow lists retrieved from ThreatER.
+  </description>
+
+  <!-- ========================= -->
+  <!-- INSIGHT PANELS -->
+  <!-- ========================= -->
+
+  <row>
+
+    <!-- Enabled vs Disabled -->
+    <panel>
+      <title>Enabled vs Disabled</title>
+      <chart>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_domain
+| stats count by enabled
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+
+    <!-- Public vs Private -->
+    <panel>
+      <title>Public vs Private</title>
+      <chart>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_domain
+| stats count by isPublic
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+
+    <!-- Healthy vs Unhealthy -->
+    <panel>
+      <title>Health Status</title>
+      <chart>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_domain
+| stats count by isHealthy
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+        <option name="charting.legend.placement">right</option>
+      </chart>
+    </panel>
+
+  </row>
+
+  <!-- ========================= -->
+  <!-- STALENESS PANELS -->
+  <!-- ========================= -->
+
+  <row>
+
+    <!-- Last Update Age -->
+    <panel>
+      <title>Last Update Age (Hours)</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_domain
+| eval lastUpdateEpoch=strptime(lastUpdateDatetime, "%Y-%m-%dT%H:%M:%S.%3N%z")
+| eval age_hours=round((now()-lastUpdateEpoch)/3600,2)
+| stats max(age_hours) as max_hours min(age_hours) as min_hours avg(age_hours) as avg_hours
+          </query>
+        </search>
+      </table>
+    </panel>
+
+    <!-- Last Sync Age -->
+    <panel>
+      <title>Last Sync Age (Hours)</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_domain
+| eval lastSyncEpoch=strptime(lastSyncDatetime, "%Y-%m-%dT%H:%M:%S.%3N%z")
+| eval age_hours=round((now()-lastSyncEpoch)/3600,2)
+| stats max(age_hours) as max_hours min(age_hours) as min_hours avg(age_hours) as avg_hours
+          </query>
+        </search>
+      </table>
+    </panel>
+
+  </row>
+
+  <!-- ========================= -->
+  <!-- FULL INVENTORY -->
+  <!-- ========================= -->
+
+  <row>
+    <panel>
+      <title>Allow Lists – Domain (Inventory)</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_domain
+| table
+    uuid
+    name
+    enabled
+    count
+    description
+    type
+    interval
+    lastUpdateDatetime
+    lastSyncDatetime
+    pluginUuid
+    isPublic
+    isHealthy
+| sort name
+          </query>
+        </search>
+        <option name="count">25</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
