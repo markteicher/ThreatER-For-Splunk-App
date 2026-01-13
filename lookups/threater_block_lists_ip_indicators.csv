@@ -1,0 +1,15 @@
+list_name,provider,description,availability,reference
+AIG Recommended,AIG,"IP indicators recommended for blocking by AIG.",AIG CyberEdge only,
+Blocklist.de,Blocklist.de,"IPs observed attacking monitored systems.",Public,https://www.blocklist.de
+CINS Army List,CINS,"IPs with very negative reputation scores, capped at ~15,000.",Public,http://www.cinsscore.com/#list
+CISA Alert List,CISA,"Malicious IPs from verified CISA advisories.",Public,https://us-cert.cisa.gov/ncas/alerts
+Cloud Attackers,threatER,"~15,000 proprietary cloud threat actor IPs.",Included,
+DHS Information Sharing,DHS,"Verified intelligence shared via CISCP.",Restricted,https://www.dhs.gov/ciscp
+DomainTools,DomainTools,"IP mappings to known malicious domains.",Marketplace,https://www.domaintools.com/solutions/threat-intelligence
+ET Block IPs,Emerging Threats,"Denied IP list from Emerging Threats.",Public,http://doc.emergingthreats.net/bin/view/Main/AllRulesets
+ET Compromised IPs,Emerging Threats,"Aggregated compromised IP intelligence.",Public,http://doc.emergingthreats.net/bin/view/Main/AllRulesets
+Feodo,abuse.ch,"C&C servers linked to Feodo/Dridex/Emotet.",Public,https://feodotracker.abuse.ch/
+OpenDBL Tor List,OpenDBL,"TOR exit node IPs.",Public,https://www.torproject.org/
+State of Missouri SOC,Missouri SOC,"Incident-driven IP deny list.",Restricted,https://cybersecurity.mo.gov
+Talos IP RBL,Cisco Talos,"High-confidence malicious IP reputation feed.",Public,https://talosintelligence.com/reputation_center/
+Tor Project,Tor Project,"TOR exit node IPs.",Public,https://www.torproject.org/
