@@ -1,109 +1,159 @@
 <form version="1.1">
   <label>Appliances</label>
 
-  <fieldset submitButton="false">
-    <input type="text" token="name_filter">
-      <label>Name</label>
-    </input>
-
-    <input type="text" token="serial_filter">
-      <label>Serial Number</label>
-    </input>
-
-    <input type="text" token="registration_filter">
-      <label>Registration Code</label>
-    </input>
-
-    <input type="text" token="location_filter">
-      <label>Location</label>
-    </input>
-
-    <input type="dropdown" token="status_filter">
-      <label>Status</label>
-      <choice value="">All</choice>
-      <choice value="ACTIVE">ACTIVE</choice>
-      <choice value="INACTIVE">INACTIVE</choice>
-      <choice value="DEGRADED">DEGRADED</choice>
-    </input>
-
-    <input type="dropdown" token="network_filter">
-      <label>Network Status</label>
-      <choice value="">All</choice>
-      <choice value="UP">UP</choice>
-      <choice value="DOWN">DOWN</choice>
-    </input>
-
-    <input type="dropdown" token="uptodate_filter">
-      <label>Up To Date</label>
-      <choice value="">All</choice>
-      <choice value="true">true</choice>
-      <choice value="false">false</choice>
-    </input>
-  </fieldset>
-
   <search>
     <query>
       index=security_threater sourcetype=threater:appliance
       | spath
       | eval
-          name_lc=lower(name),
-          serial_lc=lower(serialNumber),
-          reg_lc=lower(registrationCode),
-          location_lc=lower(location),
-          status_uc=upper(status),
-          network_uc=upper(networkStatus),
-          uptodate=tostring(isUpToDate)
-      | search
-          name_lc="*$name_filter$*"
-          serial_lc="*$serial_filter$*"
-          reg_lc="*$registration_filter$*"
-          location_lc="*$location_filter$*"
-          status_uc="$status_filter$"
-          network_uc="$network_filter$"
-          uptodate="$uptodate_filter$"
-      | mvexpand subscriptions
-      | eval
-          subscription_type=subscriptions.type,
-          plan_name=subscriptions.plan.name,
-          plan_bandwidth=subscriptions.plan.bandwidth,
-          subscription_end=subscriptions.subscriptionEndsDatetime
+          appliance_name=name,
+          appliance_uuid=uuid,
+          serial=serialNumber,
+          status=status,
+          network_status=networkStatus,
+          chassis=chassis,
+          software_version=softwareVersion,
+          update_status=updateStatus,
+          is_up_to_date=if(isUpToDate=true,"yes","no"),
+          throughput=throughputPercent,
+          last_seen=lastConnectedDatetime,
+          support_end=supportEndsDatetime,
+          company_name=company.name,
+          msp_name=company.msp.name
       | table
-          name
-          uuid
+          appliance_name
+          appliance_uuid
+          serial
           status
-          networkStatus
-          softwareVersion
-          software.family
-          software.version
-          software.buildNumber
-          updateStatus
-          isUpToDate
-          throughputPercent
-          hasDualBridging
-          adminIP
+          network_status
           chassis
-          serialNumber
-          registrationCode
-          lastConnectedDatetime
-          supportEndsDatetime
-          hasSupport
-          subscription_type
-          plan_name
-          plan_bandwidth
-          subscription_end
-          company.name
-          company.msp.name
+          software_version
+          update_status
+          is_up_to_date
+          throughput
+          last_seen
+          support_end
+          company_name
+          msp_name
     </query>
   </search>
 
+  <!-- ========================= -->
+  <!-- FILTERS -->
+  <!-- ========================= -->
+  <fieldset submitButton="false">
+    <input type="text" token="name_filter">
+      <label>Name</label>
+    </input>
+
+    <input type="dropdown" token="status_filter">
+      <label>Status</label>
+      <choice value="*">All</choice>
+      <choice value="active">Active</choice>
+      <choice value="inactive">Inactive</choice>
+      <choice value="error">Error</choice>
+      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="network_filter">
+      <label>Network Status</label>
+      <choice value="*">All</choice>
+      <choice value="UP">UP</choice>
+      <choice value="DOWN">DOWN</choice>
+      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="uptodate_filter">
+      <label>Up To Date</label>
+      <choice value="*">All</choice>
+      <choice value="yes">Yes</choice>
+      <choice value="no">No</choice>
+      <default>*</default>
+    </input>
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- APPLIANCE TABLE -->
+  <!-- ========================= -->
   <row>
     <panel>
       <table>
         <title>Appliances</title>
-        <option name="wrap">true</option>
-        <option name="count">25</option>
-        <option name="drilldown">none</option>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance
+            | spath
+            | eval
+                appliance_name=name,
+                appliance_uuid=uuid,
+                serial=serialNumber,
+                status=status,
+                network_status=networkStatus,
+                chassis=chassis,
+                software_version=softwareVersion,
+                update_status=updateStatus,
+                is_up_to_date=if(isUpToDate=true,"yes","no"),
+                throughput=throughputPercent,
+                last_seen=lastConnectedDatetime,
+                support_end=supportEndsDatetime,
+                company_name=company.name,
+                msp_name=company.msp.name
+            | search
+                appliance_name="*$name_filter$*"
+                status="$status_filter$"
+                network_status="$network_filter$"
+                is_up_to_date="$uptodate_filter$"
+            | table
+                appliance_name
+                status
+                network_status
+                software_version
+                update_status
+                is_up_to_date
+                throughput
+                last_seen
+                support_end
+                company_name
+                msp_name
+          </query>
+        </search>
+        <option name="count">20</option>
+        <option name="wrap">false</option>
       </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- STATUS DISTRIBUTION -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <chart>
+        <title>Appliance Status Distribution</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance
+            | spath
+            | stats count by status
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <chart>
+        <title>Up-to-Date vs Out-of-Date</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance
+            | spath
+            | eval state=if(isUpToDate=true,"Up To Date","Out of Date")
+            | stats count by state
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
     </panel>
   </row>
 
