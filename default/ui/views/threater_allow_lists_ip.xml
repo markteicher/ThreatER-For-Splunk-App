@@ -1,0 +1,173 @@
+<!--
+  default/data/ui/views/threater_allow_lists_ip.xml
+  ThreatER for Splunk App
+  Allow Lists - IP
+-->
+
+<dashboard version="1.1">
+  <label>Allow Lists – IP</label>
+
+  <description>
+    IP-based allow list sources configured in ThreatER.
+  </description>
+
+  <!-- ========================= -->
+  <!-- STATUS COUNTERS -->
+  <!-- ========================= -->
+  <row>
+
+    <panel>
+      <single>
+        <title>Enabled Lists</title>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip enabled=true
+| stats count
+          </query>
+        </search>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Disabled Lists</title>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip enabled=false
+| stats count
+          </query>
+        </search>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Healthy Lists</title>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip isHealthy=true
+| stats count
+          </query>
+        </search>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Unhealthy Lists</title>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip isHealthy=false
+| stats count
+          </query>
+        </search>
+      </single>
+    </panel>
+
+  </row>
+
+  <row>
+
+    <panel>
+      <single>
+        <title>Public Lists</title>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip isPublic=true
+| stats count
+          </query>
+        </search>
+      </single>
+    </panel>
+
+    <panel>
+      <single>
+        <title>Private Lists</title>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip isPublic=false
+| stats count
+          </query>
+        </search>
+      </single>
+    </panel>
+
+  </row>
+
+  <!-- ========================= -->
+  <!-- UPDATE / SYNC AGE -->
+  <!-- ========================= -->
+  <row>
+
+    <panel>
+      <title>Last Update Age (Hours)</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip
+| eval update_epoch=strptime(lastUpdateDatetime,"%Y-%m-%dT%H:%M:%S.%3N%z")
+| eval hours_since_update=round((now()-update_epoch)/3600,2)
+| table name hours_since_update
+| sort - hours_since_update
+          </query>
+        </search>
+      </table>
+    </panel>
+
+    <panel>
+      <title>Last Sync Age (Hours)</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip
+| eval sync_epoch=strptime(lastSyncDatetime,"%Y-%m-%dT%H:%M:%S.%3N%z")
+| eval hours_since_sync=round((now()-sync_epoch)/3600,2)
+| table name hours_since_sync
+| sort - hours_since_sync
+          </query>
+        </search>
+      </table>
+    </panel>
+
+  </row>
+
+  <!-- ========================= -->
+  <!-- SOURCE TABLE -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Allow List IP Sources</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:allow_list_ip
+| table
+    uuid
+    name
+    enabled
+    isHealthy
+    isPublic
+    count
+    type
+    interval
+    lastUpdateDatetime
+    lastSyncDatetime
+| sort name
+          </query>
+        </search>
+
+        <option name="drilldown">row</option>
+        <drilldown>
+          <link>
+            <![CDATA[
+/app/ThreatER_for_Splunk/threater_allow_list_ip_entries?uuid=$row.uuid$
+            ]]>
+          </link>
+        </drilldown>
+
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
