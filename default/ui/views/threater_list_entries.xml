@@ -1,0 +1,112 @@
+<form version="1.1">
+  <label>List Entries</label>
+
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:list_entry
+      | spath
+      | eval
+          list_name_lc=lower(list_name),
+          list_type_lc=lower(list_type),
+          value_lc=lower(entry.value),
+          enabled_lc=lower(tostring(entry.enabled))
+    </query>
+  </search>
+
+  <fieldset submitButton="false">
+    <input type="text" token="list_name_filter">
+      <label>List Name</label>
+    </input>
+
+    <input type="dropdown" token="list_type_filter">
+      <label>List Type</label>
+      <choice value="*">All</choice>
+      <choice value="allow">Allow</choice>
+      <choice value="block">Block</choice>
+      <choice value="threat">Threat</choice>
+      <default>*</default>
+    </input>
+
+    <input type="text" token="value_filter">
+      <label>Entry Value (IP / Domain)</label>
+    </input>
+
+    <input type="dropdown" token="enabled_filter">
+      <label>Enabled</label>
+      <choice value="*">All</choice>
+      <choice value="true">Enabled</choice>
+      <choice value="false">Disabled</choice>
+      <default>*</default>
+    </input>
+  </fieldset>
+
+  <row>
+    <panel>
+      <table>
+        <title>List Entries</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:list_entry
+            | spath
+            | eval
+                list_name_lc=lower(list_name),
+                list_type_lc=lower(list_type),
+                value_lc=lower(entry.value),
+                enabled_lc=lower(tostring(entry.enabled))
+            | search
+                list_name_lc="*$list_name_filter$*"
+                list_type_lc="$list_type_filter$"
+                value_lc="*$value_filter$*"
+                enabled_lc="$enabled_filter$"
+            | eval
+                entry_value=coalesce(entry.value, entry.ip, entry.domain),
+                entry_type=coalesce(entry.type, "unknown")
+            | table
+                list_name
+                list_type
+                entry_type
+                entry_value
+                entry.maskbits
+                entry.enabled
+                entry.source
+                entry.created_at
+                entry.updated_at
+          </query>
+        </search>
+        <option name="count">25</option>
+        <option name="wrap">false</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <chart>
+        <title>Entries by List Type</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:list_entry
+            | spath
+            | stats count by list_type
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <chart>
+        <title>Enabled vs Disabled Entries</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:list_entry
+            | spath
+            | stats count by entry.enabled
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
+
+</form>
