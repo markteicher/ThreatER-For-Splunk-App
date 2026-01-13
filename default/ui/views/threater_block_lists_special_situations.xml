@@ -1,0 +1,22 @@
+<dashboard version="1.1">
+  <label>Block Lists – Special Situations</label>
+
+  <description>
+    Reference documentation for special-situation block lists provided by ThreatER.
+  </description>
+
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>
+| inputlookup threater_block_lists_special_situations.csv
+          </query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
