@@ -1,0 +1,2 @@
+list_name,description,notes,availability,related_allow_list
+Zoom,"Known IP addresses for Zoom services that customers may choose to block.","ThreatER makes no recommendation; identical IPs exist as an allow list if preferred.",Included,Zoom Allow List
