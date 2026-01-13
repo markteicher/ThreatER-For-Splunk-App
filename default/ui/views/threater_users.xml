@@ -1,37 +1,41 @@
-<!--
-  ThreatER for Splunk App
-  Users
--->
-
-<dashboard version="1.1">
+<form version="1.1">
   <label>Users</label>
 
-  <description>
-    View, filter, and audit ThreatER users.
-  </description>
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:user
+      | spath
+      | eval
+          email_lc=lower(email),
+          role_lc=lower(role),
+          company_name_lc=lower('company.name'),
+          msp_name_lc=lower('company.msp.name'),
+          enabled_lc=lower(tostring(enabled))
+    </query>
+  </search>
 
   <!-- ========================= -->
   <!-- FILTERS -->
   <!-- ========================= -->
   <fieldset submitButton="false">
-
     <input type="text" token="email_filter">
       <label>Email</label>
     </input>
 
     <input type="dropdown" token="role_filter">
       <label>Role</label>
-      <choice value="">All</choice>
+      <choice value="*">All</choice>
       <choice value="admin">Admin</choice>
-      <choice value="user">User</choice>
       <choice value="readonly">Read Only</choice>
+      <default>*</default>
     </input>
 
     <input type="dropdown" token="enabled_filter">
       <label>Enabled</label>
-      <choice value="">All</choice>
+      <choice value="*">All</choice>
       <choice value="true">Enabled</choice>
       <choice value="false">Disabled</choice>
+      <default>*</default>
     </input>
 
     <input type="text" token="company_filter">
@@ -41,111 +45,82 @@
     <input type="text" token="msp_filter">
       <label>MSP</label>
     </input>
-
   </fieldset>
-
-  <!-- ========================= -->
-  <!-- SUMMARY PANELS -->
-  <!-- ========================= -->
-  <row>
-
-    <!-- ROLE DISTRIBUTION -->
-    <panel>
-      <title>Role Distribution</title>
-
-      <chart>
-        <search>
-          <query>
-index=security_threater sourcetype=threater:user
-| spath
-| eval role_lc=lower(role)
-| stats count by role_lc
-| sort - count
-          </query>
-        </search>
-
-        <option name="charting.chart">pie</option>
-        <option name="charting.legend.placement">right</option>
-      </chart>
-    </panel>
-
-    <!-- DISABLED USER SPOTLIGHT -->
-    <panel>
-      <title>Disabled Users</title>
-
-      <single>
-        <search>
-          <query>
-index=security_threater sourcetype=threater:user
-| spath
-| eval enabled_lc=lower(tostring(enabled))
-| where enabled_lc="false"
-| stats count
-          </query>
-        </search>
-
-        <option name="underLabel">Disabled Accounts</option>
-        <option name="colorMode">block</option>
-      </single>
-    </panel>
-
-  </row>
 
   <!-- ========================= -->
   <!-- USERS TABLE -->
   <!-- ========================= -->
   <row>
     <panel>
-      <title>ThreatER Users</title>
-
       <table>
+        <title>Users</title>
         <search>
           <query>
-index=security_threater sourcetype=threater:user
-| spath
-
-| eval
-    email_lc=lower(email),
-    role_lc=lower(role),
-    enabled_lc=lower(tostring(enabled)),
-    company_name=company.name,
-    company_name_lc=lower(company.name),
-    msp_name=company.msp.name,
-    msp_name_lc=lower(company.msp.name)
-
-| eval
-    email_filter_lc=lower(coalesce("$email_filter$", "")),
-    role_filter_lc=lower(coalesce("$role_filter$", "")),
-    enabled_filter_lc=lower(coalesce("$enabled_filter$", "")),
-    company_filter_lc=lower(coalesce("$company_filter$", "")),
-    msp_filter_lc=lower(coalesce("$msp_filter$", ""))
-
-| search
-    email_lc="*" . email_filter_lc . "*"
-    company_name_lc="*" . company_filter_lc . "*"
-    msp_name_lc="*" . msp_filter_lc . "*"
-
-| where
-    (role_filter_lc == "" OR role_lc == role_filter_lc)
-    AND
-    (enabled_filter_lc == "" OR enabled_lc == enabled_filter_lc)
-
-| table
-    email
-    role
-    enabled
-    company_name
-    msp_name
-    uuid
-
-| sort email
+            index=security_threater sourcetype=threater:user
+            | spath
+            | eval
+                email_lc=lower(email),
+                role_lc=lower(role),
+                company_name_lc=lower('company.name'),
+                msp_name_lc=lower('company.msp.name'),
+                enabled_lc=lower(tostring(enabled))
+            | search
+                email_lc="*$email_filter$*"
+                role_lc="$role_filter$"
+                enabled_lc="$enabled_filter$"
+                company_name_lc="*$company_filter$*"
+                msp_name_lc="*$msp_filter$*"
+            | table
+                email
+                role
+                enabled
+                scope
+                access
+                uuid
+                company.name
+                company.msp.name
           </query>
         </search>
-
-        <option name="count">25</option>
-        <option name="drilldown">none</option>
+        <option name="count">20</option>
+        <option name="wrap">false</option>
       </table>
     </panel>
   </row>
 
-</dashboard>
+  <!-- ========================= -->
+  <!-- ROLE DISTRIBUTION -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <chart>
+        <title>Role Distribution</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:user
+            | spath
+            | stats count by role
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+
+    <!-- ========================= -->
+    <!-- DISABLED USER SPOTLIGHT -->
+    <!-- ========================= -->
+    <panel>
+      <single>
+        <title>Disabled Users</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:user
+            | spath
+            | search enabled=false
+            | stats count
+          </query>
+        </search>
+      </single>
+    </panel>
+  </row>
+
+</form>
