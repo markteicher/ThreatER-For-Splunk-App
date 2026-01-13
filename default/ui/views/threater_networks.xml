@@ -1,0 +1,101 @@
+<form version="1.1">
+  <label>Networks</label>
+
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:network
+      | spath
+      | eval
+          name_lc=lower(name),
+          direction_lc=lower(direction),
+          status_lc=lower(status),
+          enabled_lc=lower(tostring(enabled))
+    </query>
+  </search>
+
+  <fieldset submitButton="false">
+    <input type="text" token="name_filter">
+      <label>Network Name</label>
+    </input>
+
+    <input type="dropdown" token="direction_filter">
+      <label>Direction</label>
+      <choice value="*">All</choice>
+      <choice value="inbound">Inbound</choice>
+      <choice value="outbound">Outbound</choice>
+      <default>*</default>
+    </input>
+
+    <input type="dropdown" token="enabled_filter">
+      <label>Enabled</label>
+      <choice value="*">All</choice>
+      <choice value="true">Enabled</choice>
+      <choice value="false">Disabled</choice>
+      <default>*</default>
+    </input>
+  </fieldset>
+
+  <row>
+    <panel>
+      <table>
+        <title>Configured Networks</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:network
+            | spath
+            | eval
+                name_lc=lower(name),
+                direction_lc=lower(direction),
+                enabled_lc=lower(tostring(enabled))
+            | search
+                name_lc="*$name_filter$*"
+                direction_lc="$direction_filter$"
+                enabled_lc="$enabled_filter$"
+            | table
+                name
+                direction
+                cidr
+                enabled
+                policyCount
+                createdDatetime
+                updatedDatetime
+                uuid
+          </query>
+        </search>
+        <option name="count">25</option>
+        <option name="wrap">false</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <chart>
+        <title>Networks by Direction</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:network
+            | spath
+            | stats count by direction
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+
+    <panel>
+      <chart>
+        <title>Enabled vs Disabled Networks</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:network
+            | spath
+            | stats count by enabled
+          </query>
+        </search>
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
+
+</form>
