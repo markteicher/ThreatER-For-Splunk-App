@@ -1,0 +1,19 @@
+category,description,examples
+Command and Control,Command and control servers,Botnet C2 servers (Conficker, Kelihos)
+Botnets,Known infected bots,Infected hosts in active botnets
+Spam,Known spam sources,SMTP abuse and spam proxies
+Scanners,Reconnaissance and brute force activity,Port scans and password brute force
+Endpoint Exploits,Malware exploiting endpoints,Shellcode, rootkits, worms
+Web Exploits,Web application exploitation,XSS, SQL injection, iFrame injection
+Drop Sites,Credential and data drop locations,Log and credential exfiltration sites
+Proxy/VPN,Proxy or VPN services,TOR, anonymous proxies
+DDOS,Distributed denial-of-service participants,Hosts in active DDOS attacks
+Compromised,Known compromised hosts,WebShells and hostile servers
+Fraudulent Activity,Fraud and phishing activity,Ad fraud, phishing
+Illegal Activity,Illegal online activity,Stolen credentials and marketplaces
+Undesirable Activity,Questionable but not illegal activity,Hacking tool hosting
+P2P Node,Peer-to-peer participation,Torrent nodes
+Remote Access Servers,Remote access services,GoToMyPC, LogMeIn
+TOR/Anonymizers,TOR and anonymization nodes,TOR exit nodes
+Brute Force Password,Password brute force activity,Credential stuffing IPs
+Advanced Persistent Threats,APT infrastructure,Known nation-state actors
