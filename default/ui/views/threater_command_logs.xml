@@ -1,8 +1,3 @@
-<!--
-  ThreatER for Splunk App
-  Command Logs
--->
-
 <dashboard version="1.1">
   <label>Command Logs</label>
 
@@ -10,9 +5,6 @@
     Audit log of user and system actions performed within ThreatER.
   </description>
 
-  <!-- ========================= -->
-  <!-- FILTERS -->
-  <!-- ========================= -->
   <fieldset submitButton="false">
 
     <input type="text" token="user_filter">
@@ -36,12 +28,8 @@
 
   </fieldset>
 
-  <!-- ========================= -->
-  <!-- INSIGHT PANELS -->
-  <!-- ========================= -->
   <row>
 
-    <!-- UI vs API -->
     <panel>
       <title>UI vs API Usage</title>
       <chart>
@@ -49,7 +37,7 @@
           <query>
 index=security_threater sourcetype=threater:command_log
 | spath
-| eval request_type=if(isUiRequest=true, "UI", "API")
+| eval request_type=if(isUiRequest==true,"UI","API")
 | stats count by request_type
           </query>
         </search>
@@ -58,7 +46,6 @@ index=security_threater sourcetype=threater:command_log
       </chart>
     </panel>
 
-    <!-- Top Users -->
     <panel>
       <title>Top Users by Actions</title>
       <table>
@@ -72,96 +59,57 @@ index=security_threater sourcetype=threater:command_log
           </query>
         </search>
         <option name="count">10</option>
+        <option name="drilldown">none</option>
       </table>
     </panel>
 
   </row>
 
-  <!-- ========================= -->
-  <!-- SENSITIVE ACTIONS -->
-  <!-- ========================= -->
   <row>
     <panel>
       <title>Sensitive Actions Spotlight</title>
-
       <table>
         <search>
           <query>
 index=security_threater sourcetype=threater:command_log
 | spath
 | eval action_lc=lower(action)
-
-| where
-    match(action_lc, "delete|disable|revoke|reset|remove|update|change")
-
-| table
-    datetime
-    user
-    module
-    action
-    message
-    isUiRequest
-
+| where match(action_lc,"delete|disable|revoke|reset|remove|update|change")
+| table datetime user module action message isUiRequest
 | sort - datetime
           </query>
         </search>
-
         <option name="count">20</option>
         <option name="drilldown">none</option>
       </table>
-
     </panel>
   </row>
 
-  <!-- ========================= -->
-  <!-- FULL COMMAND LOGS -->
-  <!-- ========================= -->
   <row>
     <panel>
       <title>All Command Logs</title>
-
       <table>
         <search>
           <query>
 index=security_threater sourcetype=threater:command_log
 | spath
-
 | eval
     user_lc=lower(user),
     module_lc=lower(module),
     action_lc=lower(action),
     is_ui_lc=lower(tostring(isUiRequest))
-
-| eval
-    user_filter_lc=lower(coalesce("$user_filter$", "")),
-    module_filter_lc=lower(coalesce("$module_filter$", "")),
-    action_filter_lc=lower(coalesce("$action_filter$", "")),
-    ui_filter_lc=lower(coalesce("$ui_filter$", ""))
-
-| search
-    user_lc="*" . user_filter_lc . "*"
-    module_lc="*" . module_filter_lc . "*"
-    action_lc="*" . action_filter_lc . "*"
-
 | where
-    (ui_filter_lc == "" OR is_ui_lc == ui_filter_lc)
-
-| table
-    datetime
-    user
-    module
-    action
-    message
-    isUiRequest
-
+    ( "$user_filter$"=="" OR like(user_lc,"%".lower("$user_filter$")."%") )
+AND ( "$module_filter$"=="" OR like(module_lc,"%".lower("$module_filter$")."%") )
+AND ( "$action_filter$"=="" OR like(action_lc,"%".lower("$action_filter$")."%") )
+AND ( "$ui_filter$"=="" OR is_ui_lc="$ui_filter$" )
+| table datetime user module action message isUiRequest
 | sort - datetime
           </query>
         </search>
-
         <option name="count">25</option>
         <option name="drilldown">none</option>
       </table>
-
     </panel>
   </row>
 
