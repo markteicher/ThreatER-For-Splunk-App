@@ -1,0 +1,62 @@
+<dashboard version="1.1">
+  <label>Instance Block Jobs</label>
+
+  <description>
+    Execution status of instance block jobs and per-instance results.
+  </description>
+
+  <!-- ========================= -->
+  <!-- JOB SUMMARY -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Job Summary</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:job_instance_block
+| table uuid startDatetime endDatetime status
+| sort - startDatetime
+          </query>
+        </search>
+
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+      </table>
+
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- INSTANCE RESULTS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Per-Instance Results</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:job_instance_block
+| spath path=instances{}
+| mvexpand instances
+| spath input=instances
+| table
+    uuid
+    instances.uuid
+    instances.name
+    instances.status
+    instances.message
+| sort - uuid
+          </query>
+        </search>
+
+        <option name="count">25</option>
+        <option name="drilldown">none</option>
+      </table>
+
+    </panel>
+  </row>
+
+</dashboard>
