@@ -87,6 +87,134 @@ https://portal.threater.com/api/v3/
 
 All data is ingested as **raw JSON** to preserve evidence fidelity.
 
+
+---
+
+By default, the app uses **ThreatER API v3**.  
+Optional support for **ThreatER API v6** can be enabled to expose additional configuration and settings data.
+
+---
+
+## API Versions Supported
+
+### API v3 (Default)
+
+Enabled by default.
+
+Used for:
+- Users
+- Appliances
+- Networks
+- Ports
+- Policies
+- Allow Lists
+- Block Lists
+- Threat Lists
+- Plugins
+- Command Logs
+- Reports
+
+No additional configuration is required for API v3.
+
+---
+
+## API v6 Support (Advanced / Optional)
+
+API v6 is **disabled by default**.
+
+API v6 exposes **platform configuration and settings data** that is not available via API v3.  
+This functionality is **read-only** and intended for advanced operators and administrators.
+
+### Default Behavior
+
+- API v6 calls are **not executed** unless explicitly enabled
+- The app functions fully without API v6
+- No errors or warnings are generated when API v6 is disabled
+
+This design prevents unsupported calls in environments where API v6 is not exposed.
+
+---
+
+## What API v6 Covers
+
+When enabled, API v6 is used **only** to retrieve configuration state.
+
+### General Settings
+- Hostname
+- Timezone
+- Password policy settings
+- Session duration and timeout limits
+- Login and authentication configuration
+- Loose state handling
+- Banner configuration
+
+### Network Configuration
+- Network access rules (SSH and Portal access)
+- Bridging configuration
+- Bridge interfaces (inside / outside)
+- Bypass configuration and supported states
+
+### Time and Infrastructure Services
+- NTP configuration and servers
+- SMTP configuration (mail relay settings)
+- SNMP configuration:
+  - System settings
+  - SNMP v2 users
+  - SNMP v3 users (authentication and privacy configuration)
+
+All API v6 data is rendered as **reference-style configuration views**.
+
+---
+
+## What API v6 Does Not Do
+
+Enabling API v6 does **not**:
+- Enable alerting
+- Enable ingestion health checks
+- Modify enforcement behavior
+- Create scheduled searches
+- Change existing API v3 dashboards
+- Automatically enable inputs
+
+API v6 access is strictly **read-only**.
+
+---
+
+## Enabling API v6
+
+API v6 must be explicitly enabled in the app setup.
+
+If your ThreatER tenant does **not** support API v6, leave this option disabled.
+
+If you are unsure whether API v6 is available in your environment, contact ThreatER support before enabling.
+
+---
+
+## Operator Guidance
+
+- Enable API v6 only if your ThreatER environment supports it
+- API v6 is intended for administrators and advanced operators
+- All configuration views sourced from API v6 are informational only
+
+---
+
+## Security and Compliance Notes
+
+- API v6 usage is gated behind an explicit operator-controlled toggle
+- No credentials or secrets are displayed in clear text
+- Sensitive fields (such as passwords) are masked
+- All API v6 calls are read-only
+
+---
+
+## Summary
+
+- API v3: Enabled by default, core operational data
+- API v6: Optional, configuration and settings visibility
+- No destructive actions
+- No enforcement changes
+- No background automation without operator consent
+
 ---
 
 ## 📊 Dashboards
