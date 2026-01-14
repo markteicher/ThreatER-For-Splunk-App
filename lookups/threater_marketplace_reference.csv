@@ -1,0 +1,12 @@
+service_name,category,description,examples
+Log Management,Operational Services,"Advanced data handling, analysis, and insights to support investigation, compliance, and operational visibility.","Centralized logging, long-term retention, forensic analysis"
+Threat Hunting,Security Services,"Proactive threat hunting services designed to identify unknown or hidden threats within a customer network.","IOC pivoting, anomaly detection, targeted threat investigations"
+Platinum Support,Support Services,"24x7 premium support providing log management, list management, block management, and rapid response assistance.","Priority support, managed block lists, expert remediation guidance"
+Well-Fed Threat Intelligence,Threat Intelligence,"Continuously curated threat intelligence feeds enriched with confidence scoring and risk context.","High-fidelity IOC feeds, enriched threat indicators"
+Proofpoint Threat Intelligence,Threat Intelligence,"Enterprise-grade threat intelligence feed consisting of well-vetted indicators of compromise across multiple threat categories.","Malware IPs, phishing infrastructure, C2 indicators"
+Webroot Threat Intelligence,Threat Intelligence,"Threat intelligence sourced from Webroot BrightCloud, providing large-scale IOC coverage and reputation scoring.","URL reputation, IP reputation, malware infrastructure"
+DomainTools Hostlists,Threat Intelligence,"Domain and DNS intelligence mapping infrastructure and IPs to known malicious domains.","Malicious domain resolution, DNS-based threat detection"
+Bitdefender Advanced Threat Intelligence,Threat Intelligence,"Threat intelligence feed sourced from Bitdefender covering malware, botnets, and advanced threats.","Malware infrastructure, botnet tracking"
+CleanDNS Abuse Target Intelligence Feed,Threat Intelligence,"DNS-based abuse and threat intelligence focused on malicious domains and DNS abuse.","Malicious domains, abuse infrastructure"
+Cyjax Threat Intelligence Feed,Threat Intelligence,"Threat intelligence focused on geopolitical, financial crime, and cyber risk intelligence.","Fraud campaigns, cybercrime infrastructure"
+Malware Patrol Threat Intelligence Feed,Threat Intelligence,"Threat intelligence focused on malware distribution, exploit kits, and malicious infrastructure.","Malware hosting, exploit kit infrastructure"
