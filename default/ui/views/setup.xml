@@ -26,10 +26,17 @@
       <default>30</default>
     </input>
 
-    <!-- FIXED -->
     <input type="checkbox" token="verify_ssl">
       <label>Verify SSL Certificates</label>
       <choice value="true">Enable SSL Verification</choice>
+      <default>true</default>
+    </input>
+
+    <!-- API v6 Toggle -->
+    <input type="checkbox" token="enable_api_v6">
+      <label>Enable API v6 (Experimental)</label>
+      <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
   </fieldset>
@@ -60,7 +67,7 @@
   </fieldset>
 
   <!-- ========================= -->
-  <!-- Data Collection (Informational) -->
+  <!-- Data Collection -->
   <!-- ========================= -->
   <fieldset submitButton="false">
     <legend>Data Collection</legend>
