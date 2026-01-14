@@ -1,0 +1,68 @@
+<!--
+  ThreatER for Splunk App
+  Marketplace Reference
+  marketplace_reference.xml
+
+  Static reference sourced from lookup:
+  threater_marketplace_reference.csv
+-->
+
+<dashboard version="1.1">
+  <label>Marketplace Reference</label>
+
+  <description>
+    Reference guide describing ThreatER Marketplace services, categories,
+    and intended use cases as documented in the ThreatER platform.
+  </description>
+
+  <!-- ========================= -->
+  <!-- MARKETPLACE SERVICES -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Marketplace Services Overview</title>
+
+      <table>
+        <search>
+          <query>
+| inputlookup threater_marketplace_reference.csv
+| sort category service_name
+| table
+    service_name
+    category
+    description
+    examples
+          </query>
+        </search>
+
+        <option name="count">50</option>
+        <option name="drilldown">none</option>
+      </table>
+
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- CATEGORY SUMMARY -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Service Categories</title>
+
+      <table>
+        <search>
+          <query>
+| inputlookup threater_marketplace_reference.csv
+| stats count AS services by category
+| sort - services
+          </query>
+        </search>
+
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+      </table>
+
+    </panel>
+  </row>
+
+</dashboard>
