@@ -1,0 +1,134 @@
+<!--
+  ThreatER for Splunk App
+  Marketplace Service Details
+  marketplace_view_details.xml
+-->
+
+<dashboard version="1.1">
+  <label>Marketplace Service Details</label>
+
+  <description>
+    Detailed view of a selected ThreatER marketplace service, including pricing,
+    subscription status, partners, and associated lists.
+  </description>
+
+  <!-- ========================= -->
+  <!-- SERVICE OVERVIEW -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Service Overview</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:marketplace
+| where id="$id$"
+| eval logo=if(isnotnull(logoUrl),
+    "<img src='" . logoUrl . "' height='60' />",
+    "")
+| table
+    logo
+    name
+    description
+    tagLine
+    planType
+    isSubscribed
+    canSubscribe
+    cannotSubscribeReason
+          </query>
+        </search>
+
+        <option name="count">1</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- PRICING -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Pricing</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:marketplace_prices
+| where marketplace_id="$id$"
+| table
+    billingCycle
+    priceType
+    description
+    price
+    instanceCount
+    priceTotal
+    prefix
+    suffix
+    perInstance
+          </query>
+        </search>
+
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- PARTNERS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Partners</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:marketplace_partners
+| where marketplace_id="$id$"
+| eval logo=if(isnotnull(logoUrl),
+    "<img src='" . logoUrl . "' height='40' />",
+    "")
+| table
+    logo
+    description
+          </query>
+        </search>
+
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- INCLUDED LISTS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Included Lists</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:marketplace_lists
+| where marketplace_id="$id$"
+| table
+    uuid
+    name
+    listType
+    iocType
+    count
+    description
+          </query>
+        </search>
+
+        <option name="count">15</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
