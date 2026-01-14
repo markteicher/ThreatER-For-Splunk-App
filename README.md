@@ -581,4 +581,4 @@ https://portal.threater.com/api/v3/
 
 ## 📜 License
 
-MIT License
+Apache-2.0 License
