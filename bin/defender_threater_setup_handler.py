@@ -34,7 +34,7 @@ def get_service(session_key):
 
 
 def normalize_checkbox(value):
-    return "true" if str(value).lower() in ("true", "1") else "false"
+    return "true" if str(value).lower() in ("true", "1", "yes", "on") else "false"
 
 
 # ------------------------------------------------------------------
@@ -106,12 +106,12 @@ def handle_edit(service, args):
         "collect_users": normalize_checkbox(args.get("collect_users")),
         "collect_reports": normalize_checkbox(args.get("collect_reports")),
         "collect_events": normalize_checkbox(args.get("collect_events")),
+
+        # ✅ API v6 master toggle (persisted only — enforced elsewhere)
+        "enable_api_v6": normalize_checkbox(args.get("enable_api_v6")),
     }
 
-    update_payload = {
-        k: v for k, v in field_map.items() if v is not None
-    }
-
+    update_payload = {k: v for k, v in field_map.items() if v is not None}
     stanza.update(update_payload)
 
     respond({"status": "saved"})
