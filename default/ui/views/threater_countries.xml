@@ -1,0 +1,28 @@
+<dashboard version="1.1">
+  <label>Countries</label>
+
+  <description>
+    Reference list of countries available in ThreatER, including ISO 3166-1 alpha-2 codes.
+  </description>
+
+  <row>
+    <panel>
+      <title>Country Reference</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:countries
+| table isoCode2 name
+| sort name
+          </query>
+        </search>
+
+        <option name="count">50</option>
+        <option name="drilldown">none</option>
+      </table>
+
+    </panel>
+  </row>
+
+</dashboard>
