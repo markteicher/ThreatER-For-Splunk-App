@@ -32,7 +32,6 @@
       <default>true</default>
     </input>
 
-    <!-- API v6 Toggle -->
     <input type="checkbox" token="enable_api_v6">
       <label>Enable API v6 (Experimental)</label>
       <choice value="true">Enable</choice>
@@ -50,6 +49,7 @@
     <input type="checkbox" token="proxy_enabled">
       <label>Enable Proxy</label>
       <choice value="true">Use Proxy</choice>
+      <default>false</default>
     </input>
 
     <input type="text" token="proxy_url" depends="$proxy_enabled$">
@@ -75,52 +75,45 @@
     <input type="checkbox" token="collect_lists">
       <label>Lists (Allow, Block, Threat)</label>
       <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
     <input type="checkbox" token="collect_plugins">
       <label>Plugins / External Lists</label>
       <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
     <input type="checkbox" token="collect_enforcers">
       <label>Enforcers &amp; Enforcement Status</label>
       <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
     <input type="checkbox" token="collect_networks">
       <label>Networks &amp; Ports</label>
       <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
     <input type="checkbox" token="collect_users">
       <label>Users &amp; Administration</label>
       <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
     <input type="checkbox" token="collect_reports">
       <label>Reports &amp; Scheduled Reports</label>
       <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
     <input type="checkbox" token="collect_events">
       <label>Block Events &amp; Subscriptions</label>
       <choice value="true">Enable</choice>
+      <default>false</default>
     </input>
 
   </fieldset>
-
-  <!-- ========================= -->
-  <!-- Submit Help -->
-  <!-- ========================= -->
-  <row>
-    <panel>
-      <html>
-        <p>
-          Click <strong>Save</strong> to store configuration securely.
-          After saving, validate connectivity and enable the desired modular inputs.
-        </p>
-      </html>
-    </panel>
-  </row>
 
 </form>
