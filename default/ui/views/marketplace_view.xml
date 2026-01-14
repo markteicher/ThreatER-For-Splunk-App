@@ -1,94 +1,60 @@
-<!--
-  ThreatER for Splunk App
-  Marketplace
-  marketplace_view.xml
--->
-
 <dashboard version="1.1">
   <label>Marketplace</label>
 
   <description>
-    Browse available ThreatER marketplace services and subscriptions.
+    Available ThreatER services and subscriptions.
   </description>
 
-  <!-- ========================= -->
-  <!-- FILTERS -->
-  <!-- ========================= -->
-  <fieldset submitButton="false">
-
-    <input type="text" token="name_filter">
-      <label>Service Name</label>
-    </input>
-
-    <input type="dropdown" token="subscription_filter">
-      <label>Subscription Status</label>
-      <choice value="">All</choice>
-      <choice value="true">Subscribed</choice>
-      <choice value="false">Available</choice>
-    </input>
-
-    <input type="text" token="plan_type_filter">
-      <label>Plan Type</label>
-    </input>
-
-  </fieldset>
-
-  <!-- ========================= -->
-  <!-- MARKETPLACE CATALOG -->
-  <!-- ========================= -->
   <row>
     <panel>
-      <title>Marketplace Services</title>
+      <title>Available Services</title>
 
       <table>
         <search>
           <query>
 index=security_threater sourcetype=threater:marketplace
-
-| eval
-    name_lc=lower(name),
-    plan_type_lc=lower(planType),
-    subscribed_lc=lower(tostring(isSubscribed))
-
-| eval
-    name_filter_lc=lower(coalesce("$name_filter$", "")),
-    plan_type_filter_lc=lower(coalesce("$plan_type_filter$", "")),
-    subscription_filter_lc=lower(coalesce("$subscription_filter$", ""))
-
-| search
-    name_lc="*" . name_filter_lc . "*"
-    plan_type_lc="*" . plan_type_filter_lc . "*"
-
-| where
-    subscription_filter_lc="" OR subscribed_lc=subscription_filter_lc
-
-| eval logo=if(isnotnull(logoUrl),
-    "<img src='" . logoUrl . "' height='40' />",
-    "")
-
-| table
-    logo
-    name
-    tagLine
-    planType
-    isSubscribed
-
+| table name tagLine isSubscribed canSubscribe
 | sort name
           </query>
         </search>
 
-        <option name="count">20</option>
         <option name="drilldown">row</option>
-
         <drilldown>
           <link>
-            <![CDATA[
-              /app/ThreatER_for_Splunk/marketplace_view_details?id=$row.id$
-            ]]>
+            /app/ThreatER_for_Splunk/marketplace_view_details?service=$row.name$
           </link>
         </drilldown>
-
       </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Service Categories</title>
+
+      <html>
+        <div style="display:flex;gap:30px;flex-wrap:wrap;">
+          <div>
+            <h3><span class="icon-shield"></span> Threat Intelligence</h3>
+            <p>Curated intelligence feeds and IOC sources.</p>
+          </div>
+
+          <div>
+            <h3><span class="icon-search"></span> Threat Hunting</h3>
+            <p>Proactive investigation services.</p>
+          </div>
+
+          <div>
+            <h3><span class="icon-database"></span> Log Management</h3>
+            <p>Advanced data handling and analysis.</p>
+          </div>
+
+          <div>
+            <h3><span class="icon-headset"></span> Platinum Support</h3>
+            <p>24x7 premium operational support.</p>
+          </div>
+        </div>
+      </html>
     </panel>
   </row>
 
