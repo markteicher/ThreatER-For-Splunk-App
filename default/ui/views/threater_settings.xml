@@ -1,0 +1,203 @@
+<dashboard version="1.1">
+  <label>Settings</label>
+
+  <row>
+    <panel>
+      <title>General</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+hostname
+timezone
+general.minimumPasswordDurationDays
+general.maximumPasswordDurationDays
+general.minimumPasswordLength
+general.maximumPasswordLength
+general.minimumPasswordCharacterGroups
+general.lockoutTimeMinutes
+general.maximumLoginAttempts
+general.maximumSessionDurationMinutes
+general.sessionTimeoutMinutes
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Loose State</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+looseState.mode
+looseState.expireMinutes
+looseState.canUse
+looseState.canUseReason
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Banner</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+banner.enabled
+banner.acceptedText
+banner.declinedText
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Network Access</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+network.access.canManageSsh
+network.access.canManagePortal
+network.access.rules
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Bridging</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+network.bridging.canManagePortal
+network.bridging.bridges
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>Bypass</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+network.bridging.bypass.currentState
+network.bridging.bypass.startupState
+network.bridging.bypass.powerOffState
+network.bridging.bypass.bypassType
+network.bridging.bypass.reportedState
+network.bridging.bypass.validCurrentStates
+network.bridging.bypass.validStartupStates
+network.bridging.bypass.validPowerOffStates
+network.bridging.bypass.bypassSupported
+network.bridging.bypass.disconnectSupported
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>NTP</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+ntp.servers
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>SMTP</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+smtp.enabled
+smtp.host
+smtp.port
+smtp.protocol
+smtp.fromAddress
+smtp.toAddress
+smtp.username
+smtp.password
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>SNMP Settings</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+snmp.settings.contact
+snmp.settings.description
+snmp.settings.location
+snmp.settings.name
+snmp.settings.port
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <row>
+    <panel>
+      <title>SNMP Users</title>
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:settings
+| table
+snmp.users.v2
+snmp.users.v3
+          </query>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
