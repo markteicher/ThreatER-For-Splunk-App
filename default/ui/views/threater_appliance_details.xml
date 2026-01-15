@@ -1,0 +1,149 @@
+<form version="1.1">
+  <label>Appliance Details</label>
+
+  <description>
+    Detailed view of a single ThreatER appliance.
+  </description>
+
+  <!-- ========================= -->
+  <!-- UUID INPUT -->
+  <!-- ========================= -->
+  <fieldset submitButton="false">
+    <input type="text" token="appliance_uuid" required="true">
+      <label>Appliance UUID</label>
+    </input>
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- BASE SEARCH -->
+  <!-- ========================= -->
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
+    </query>
+  </search>
+
+  <!-- ========================= -->
+  <!-- GENERAL DETAILS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>General</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
+            | table
+                name
+                uuid
+                serialNumber
+                registrationCode
+                location
+                chassis
+                status
+                networkStatus
+                adminIP
+          </query>
+        </search>
+        <option name="wrap">false</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- SOFTWARE -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Software</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
+            | table
+                softwareVersion
+                updateStatus
+                isUpToDate
+                software.uuid
+                software.family
+                software.version
+                software.buildNumber
+                software.status
+                software.releaseDatetime
+                software.priority
+          </query>
+        </search>
+        <option name="wrap">false</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- CONNECTIVITY -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Connectivity</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
+            | table
+                throughputPercent
+                lastConnectedDatetime
+                hasDualBridging
+          </query>
+        </search>
+        <option name="wrap">false</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- SUPPORT -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Support</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
+            | table
+                hasSupport
+                supportEndsDatetime
+          </query>
+        </search>
+        <option name="wrap">false</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- OWNERSHIP -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Ownership</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
+            | table
+                company.uuid
+                company.name
+                company.msp.uuid
+                company.msp.name
+          </query>
+        </search>
+        <option name="wrap">false</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</form>
