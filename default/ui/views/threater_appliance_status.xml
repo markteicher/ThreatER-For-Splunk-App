@@ -1,0 +1,72 @@
+<form version="1.1">
+  <label>Appliance Status</label>
+
+  <description>
+    Current runtime and service status for a single ThreatER appliance.
+  </description>
+
+  <!-- ========================= -->
+  <!-- APPLIANCE UUID -->
+  <!-- ========================= -->
+  <fieldset submitButton="false">
+    <input type="text" token="appliance_uuid" required="true">
+      <label>Appliance UUID</label>
+    </input>
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- BASE SEARCH -->
+  <!-- ========================= -->
+  <search>
+    <query>
+      index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
+    </query>
+  </search>
+
+  <!-- ========================= -->
+  <!-- STATUS OVERVIEW -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Status Overview</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
+            | table
+                uuid
+                status
+                networkStatus
+                message
+                lastUpdatedDatetime
+          </query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- SERVICE STATUS -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <table>
+        <title>Service Status</title>
+        <search>
+          <query>
+            index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
+            | table
+                serviceName
+                serviceStatus
+                serviceMessage
+          </query>
+        </search>
+        <option name="wrap">true</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</form>
