@@ -1,0 +1,111 @@
+<!--
+  ThreatER for Splunk App
+  ASN Temporal Report
+  Source: GET /reports/asns/temporal
+-->
+
+<dashboard version="1.1">
+  <label>ASN Temporal Report</label>
+
+  <description>
+    Temporal view of top Autonomous Systems involved in allowed or blocked traffic
+    over a defined time range.
+  </description>
+
+  <!-- ========================= -->
+  <!-- FILTERS -->
+  <!-- ========================= -->
+  <fieldset submitButton="true">
+
+    <input type="time" token="time_range">
+      <label>Time Range</label>
+      <default>
+        <earliest>-30m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+
+    <input type="dropdown" token="verdict">
+      <label>Verdict</label>
+      <choice value="blocked">Blocked</choice>
+      <choice value="allowed">Allowed</choice>
+      <default>blocked</default>
+    </input>
+
+    <input type="text" token="applianceUuid">
+      <label>Appliance UUID</label>
+    </input>
+
+    <input type="text" token="policyUuid">
+      <label>Policy UUID</label>
+    </input>
+
+    <input type="dropdown" token="top">
+      <label>Top ASNs</label>
+      <choice value="5">5</choice>
+      <choice value="10">10</choice>
+      <choice value="20">20</choice>
+      <default>10</default>
+    </input>
+
+  </fieldset>
+
+  <!-- ========================= -->
+  <!-- TEMPORAL TREND -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>ASN Activity Over Time</title>
+
+      <chart>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:reports:asn_temporal
+verdict="$verdict$"
+| where
+    ("$applianceUuid$"="" OR applianceUuid="$applianceUuid$")
+    AND ("$policyUuid$"="" OR policyUuid="$policyUuid$")
+| timechart span=5m sum(count) by asn limit=$top$
+          </query>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
+        </search>
+
+        <option name="charting.chart">line</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.axisTitleX.text">Time</option>
+        <option name="charting.axisTitleY.text">Event Count</option>
+      </chart>
+    </panel>
+  </row>
+
+  <!-- ========================= -->
+  <!-- SUMMARY TABLE -->
+  <!-- ========================= -->
+  <row>
+    <panel>
+      <title>Top ASNs (Summary)</title>
+
+      <table>
+        <search>
+          <query>
+index=security_threater sourcetype=threater:reports:asn_temporal
+verdict="$verdict$"
+| where
+    ("$applianceUuid$"="" OR applianceUuid="$applianceUuid$")
+    AND ("$policyUuid$"="" OR policyUuid="$policyUuid$")
+| stats sum(count) as total_events by asn, asnName
+| sort - total_events
+| head $top$
+          </query>
+          <earliest>$time_range.earliest$</earliest>
+          <latest>$time_range.latest$</latest>
+        </search>
+
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+
+</dashboard>
