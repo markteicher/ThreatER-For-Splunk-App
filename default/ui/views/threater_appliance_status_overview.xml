@@ -1,0 +1,103 @@
+<form version="1.1" theme="light">
+  <label>ThreatER — Appliance Status Overview</label>
+
+  <!-- ========= Header / Legend ========= -->
+  <row>
+    <panel>
+      <html>
+        <div style="font-size:16px;">
+          <b style="font-size:18px;">🧰 ThreatER Appliance Status Overview</b>
+          <div style="margin-top:6px;">
+            <b>Connectivity:</b>
+            🟢 Connected recently &nbsp;·&nbsp;
+            🟡 Stale &nbsp;·&nbsp;
+            🔴 Disconnected
+          </div>
+          <div style="margin-top:6px;">
+            <b>Network:</b>
+            🌐 UP &nbsp;·&nbsp;
+            🚫 DOWN
+          </div>
+        </div>
+      </html>
+    </panel>
+  </row>
+
+  <!-- ========= Base Search ========= -->
+  <search id="base_all">
+    <query>
+      index=security_threater sourcetype=threater:appliance_status
+
+      | eval last_epoch = case(
+          match(lastConnectedDatetime,"^\d{13}$"), round(tonumber(lastConnectedDatetime)/1000),
+          match(lastConnectedDatetime,"^\d{10}$"), tonumber(lastConnectedDatetime),
+          match(lastConnectedDatetime,"^\d{4}-\d{2}-\d{2}T"), strptime(lastConnectedDatetime,"%Y-%m-%dT%H:%M:%S%Z"),
+          true(), null()
+        )
+
+      | eval age_sec = now() - coalesce(last_epoch, now())
+
+      | eval ConnectionAge = case(
+          age_sec < 3600, "🟢 less than 1 hour",
+          age_sec < 86400, "🟢 less than 1 day",
+          age_sec < 604800, "🟡 less than 1 week",
+          age_sec < 2592000, "🟡 less than 1 month",
+          true(), "🔴 over 1 month"
+        )
+
+      | eval NetworkBadge = case(
+          networkStatus="UP", "🌐 UP",
+          networkStatus="DOWN", "🚫 DOWN",
+          true(), "❓ UNKNOWN"
+        )
+
+      | eval StatusBadge = case(
+          status="active", "🟢 Active",
+          status="inactive", "🟡 Inactive",
+          status="error", "🔴 Error",
+          true(), "❓ Unknown"
+        )
+
+      | eval LastConnectedReadable = if(
+          isnull(last_epoch),
+          lastConnectedDatetime,
+          strftime(last_epoch, "%Y-%m-%d %H:%M:%S %Z")
+        )
+    </query>
+    <earliest>0</earliest>
+    <latest>now</latest>
+  </search>
+
+  <!-- ========= Appliance Status Table ========= -->
+  <row>
+    <panel>
+      <table>
+        <title>Appliance Status Summary</title>
+        <search base="base_all">
+          <query>
+            | table
+                uuid
+                name
+                StatusBadge
+                NetworkBadge
+                ConnectionAge
+                LastConnectedReadable
+                message
+          </query>
+        </search>
+
+        <option name="count">25</option>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">true</option>
+
+        <!-- Drilldown to details -->
+        <drilldown>
+          <link target="_blank">
+            threater_appliance_status_details.xml?form.appliance_uuid=$row.uuid$
+          </link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+
+</form>
