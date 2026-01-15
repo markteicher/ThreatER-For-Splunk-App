@@ -1,96 +1,36 @@
 <dashboard version="1.1">
   <label>Appliance Status Details</label>
 
-  <description>
-    Detailed operational status fields for a specific ThreatER appliance.
-  </description>
-
-  <!-- ========================= -->
-  <!-- BASE SEARCH -->
-  <!-- ========================= -->
-  <search>
-    <query>
-index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
-    </query>
-  </search>
-
-  <!-- ========================= -->
-  <!-- CORE STATUS -->
-  <!-- ========================= -->
   <row>
     <panel>
       <table>
-        <title>Core Status</title>
+        <title>Appliance Status</title>
         <search>
           <query>
 index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
+| eval
+    last_connected_epoch = strptime(lastConnectedDatetime, "%Y-%m-%dT%H:%M:%S.%3N%z"),
+    now_epoch = now(),
+    diff_seconds = now_epoch - last_connected_epoch
+| eval
+    connection_age =
+        case(
+            diff_seconds &gt;= 31536000, floor(diff_seconds/31536000) . " years",
+            diff_seconds &gt;= 2592000,  floor(diff_seconds/2592000)  . " months",
+            diff_seconds &gt;= 604800,   floor(diff_seconds/604800)   . " weeks",
+            diff_seconds &gt;= 86400,    floor(diff_seconds/86400)    . " days",
+            diff_seconds &gt;= 3600,     floor(diff_seconds/3600)     . " hours",
+            true(),                     diff_seconds . " seconds"
+        )
 | table
     uuid
     status
     networkStatus
     updateStatus
     isUpToDate
-          </query>
-        </search>
-        <option name="wrap">false</option>
-        <option name="drilldown">none</option>
-      </table>
-    </panel>
-  </row>
-
-  <!-- ========================= -->
-  <!-- PERFORMANCE -->
-  <!-- ========================= -->
-  <row>
-    <panel>
-      <table>
-        <title>Performance</title>
-        <search>
-          <query>
-index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
-| table
     throughputPercent
-          </query>
-        </search>
-        <option name="wrap">false</option>
-        <option name="drilldown">none</option>
-      </table>
-    </panel>
-  </row>
-
-  <!-- ========================= -->
-  <!-- CONNECTIVITY -->
-  <!-- ========================= -->
-  <row>
-    <panel>
-      <table>
-        <title>Connectivity</title>
-        <search>
-          <query>
-index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
-| table
     lastConnectedDatetime
-          </query>
-        </search>
-        <option name="wrap">false</option>
-        <option name="drilldown">none</option>
-      </table>
-    </panel>
-  </row>
-
-  <!-- ========================= -->
-  <!-- SUPPORT -->
-  <!-- ========================= -->
-  <row>
-    <panel>
-      <table>
-        <title>Support</title>
-        <search>
-          <query>
-index=security_threater sourcetype=threater:appliance_status uuid="$appliance_uuid$"
-| table
-    hasSupport
-    supportEndsDatetime
+    connection_age
           </query>
         </search>
         <option name="wrap">false</option>
