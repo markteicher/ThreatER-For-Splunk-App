@@ -6,22 +6,13 @@
   </description>
 
   <!-- ========================= -->
-  <!-- UUID INPUT -->
+  <!-- APPLIANCE UUID (FROM PARENT OVERVIEW) -->
   <!-- ========================= -->
   <fieldset submitButton="false">
     <input type="text" token="appliance_uuid" required="true">
       <label>Appliance UUID</label>
     </input>
   </fieldset>
-
-  <!-- ========================= -->
-  <!-- BASE SEARCH -->
-  <!-- ========================= -->
-  <search>
-    <query>
-      index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
-    </query>
-  </search>
 
   <!-- ========================= -->
   <!-- GENERAL DETAILS -->
@@ -46,7 +37,6 @@
           </query>
         </search>
         <option name="wrap">false</option>
-        <option name="drilldown">none</option>
       </table>
     </panel>
   </row>
@@ -75,13 +65,12 @@
           </query>
         </search>
         <option name="wrap">false</option>
-        <option name="drilldown">none</option>
       </table>
     </panel>
   </row>
 
   <!-- ========================= -->
-  <!-- CONNECTIVITY -->
+  <!-- CONNECTIVITY (WITH DELTA) -->
   <!-- ========================= -->
   <row>
     <panel>
@@ -90,14 +79,42 @@
         <search>
           <query>
             index=security_threater sourcetype=threater:appliance uuid="$appliance_uuid$"
+
+            | eval last_epoch = case(
+                match(lastConnectedDatetime,"^\d{13}$"), round(tonumber(lastConnectedDatetime)/1000),
+                match(lastConnectedDatetime,"^\d{10}$"), tonumber(lastConnectedDatetime),
+                match(lastConnectedDatetime,"^\d{4}-\d{2}-\d{2}T"), strptime(lastConnectedDatetime,"%Y-%m-%dT%H:%M:%S%Z"),
+                true(), null()
+              )
+
+            | eval age_sec = now() - last_epoch
+
+            | eval "Connection Age" = case(
+                age_sec < 3600, round(age_sec/60) . " minutes",
+                age_sec < 86400, round(age_sec/3600) . " hours",
+                age_sec < 604800, round(age_sec/86400) . " days",
+                age_sec < 2592000, round(age_sec/604800) . " weeks",
+                age_sec < 31536000, round(age_sec/2592000) . " months",
+                true(), round(age_sec/31536000) . " years"
+              )
+
+            | eval "Connection Status" = case(
+                age_sec < 3600, "🟢 Very Recent",
+                age_sec < 86400, "🟢 Recent",
+                age_sec < 604800, "🟡 Stale",
+                age_sec < 2592000, "🟠 Old",
+                true(), "🔴 Very Old"
+              )
+
             | table
                 throughputPercent
                 lastConnectedDatetime
+                "Connection Age"
+                "Connection Status"
                 hasDualBridging
           </query>
         </search>
         <option name="wrap">false</option>
-        <option name="drilldown">none</option>
       </table>
     </panel>
   </row>
@@ -118,7 +135,6 @@
           </query>
         </search>
         <option name="wrap">false</option>
-        <option name="drilldown">none</option>
       </table>
     </panel>
   </row>
@@ -141,7 +157,6 @@
           </query>
         </search>
         <option name="wrap">false</option>
-        <option name="drilldown">none</option>
       </table>
     </panel>
   </row>
