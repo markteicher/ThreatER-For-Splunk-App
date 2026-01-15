@@ -2,9 +2,12 @@
   <label>Software</label>
 
   <description>
-    Available ThreatER software versions and builds.
+    Global ThreatER software catalog and release inventory.
   </description>
 
+  <!-- ========================= -->
+  <!-- SOFTWARE INVENTORY -->
+  <!-- ========================= -->
   <row>
     <panel>
       <title>Software Inventory</title>
@@ -13,53 +16,20 @@
         <search>
           <query>
 index=security_threater sourcetype=threater:software
-| spath
-| eval
-    family=coalesce(family,"software"),
-    build=tostring(buildNumber),
-    release_time=coalesce(releaseDatetime,"")
 | table
     family
     version
-    build
+    buildNumber
     status
     priority
-    release_time
+    releaseDatetime
     hasReleaseNotes
-| sort - release_time
+| sort - releaseDatetime
           </query>
         </search>
 
         <option name="count">25</option>
-        <option name="drilldown">none</option>
-      </table>
-    </panel>
-  </row>
-
-  <row>
-    <panel>
-      <title>Architectures</title>
-
-      <table>
-        <search>
-          <query>
-index=security_threater sourcetype=threater:software
-| spath
-| mvexpand architectures{}
-| eval
-    architecture=architectures{}.architecture,
-    md5sum=architectures{}.md5sum,
-    supportsWifi=architectures{}.supportsWifi
-| table
-    version
-    architecture
-    supportsWifi
-    md5sum
-| sort version architecture
-          </query>
-        </search>
-
-        <option name="count">50</option>
+        <option name="wrap">false</option>
         <option name="drilldown">none</option>
       </table>
     </panel>
