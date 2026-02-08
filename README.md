@@ -1,3 +1,5 @@
+![ThreatER](docs/images/threater_logo.jpeg)
+
 # ThreatER for Splunk App
 
 ## Overview
